@@ -6,19 +6,13 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
-    "lint:prettier": "prettier --check .",
-    "lint": "yarn lint:js && yarn lint:prettier",
-    "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
+    "postinstall": "nuxt prepare"
   },
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.5",
     "@nuxt/devtools": "^0.8.2",
     "@nuxtjs/color-mode": "^3.2.0",
     "@vueuse/nuxt": "^10.2.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
     "nuxt": "^3.7.0",
     "prettier": "^3.0.3",
     "sass": "^1.66.1"

@@ -13,7 +13,7 @@
       </el-table>
     </el-card>
     <client-only>
-      <el-dialog v-model="dialogVisible">
+      <el-dialog :model-value="dialogVisible">
         <template #header>
           <div style="display: flex; justify-content: space-between;align-items: center">
             <h1>{{  dialogHeader.title  }}</h1>
@@ -22,17 +22,16 @@
         </template>
         <el-form>
           <el-form-item label="Section name">
-            <el-input :value="module.sectionName" />
+            <el-input :model-value="module.sectionName" />
           </el-form-item>
         </el-form>
       </el-dialog>
     </client-only>
   </div>
 </template>
-<script setup lang="ts">
+<script setup>
   import { useModulesStore } from '~/store/modules'
   import { useRoute } from 'vue-router'
-  import { ref } from 'vue'
 
   const modulesStore = useModulesStore()
   let dialogVisible = ref(false)
@@ -59,6 +58,4 @@
     modulesStore.resetCurrentModule()
     dialogVisible.value = true
   }
-  
-
 </script>

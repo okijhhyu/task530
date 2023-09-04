@@ -1,9 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-
+// import vue from '@vitejs/plugin-vue'
 export default defineNuxtConfig({
   devtools: { enabled: true },
   // css
-  css: ['~/assets/scss/index.scss'],
+  css: ['~/assets/scss/index.scss', ],
 
   runtimeConfig: {
     dburl: process.env.DATABASE_URL,
@@ -20,15 +20,27 @@ export default defineNuxtConfig({
     '@pinia/nuxt'
   ],
   vite: {
+    // vue: {
+    //   customElement: true,
+    // },
+    // vueJsx: {
+    //     mergeProps: true,
+    // },
     css: {
       preprocessorOptions: {
         scss: {
           additionalData: `@use "@/assets/scss/element/index.scss" as element;`,
         },
       },
-    },
+    }
   },
-
+  // vue: {
+  //   compilerOptions: {
+  //     isCustomElement: (tag) => {
+  //         return tag.includes('-');
+  //     },
+  //   },
+  // },
   elementPlus: {
     icon: 'ElIcon',
     importStyle: 'scss',

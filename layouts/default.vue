@@ -19,18 +19,3 @@
 import HeaderComponent from '@/components/common/header/index.vue'
 
 </script>
-<style lang="scss" scoped>
-.el-header {
-  position: relative;
-  border: var(--border) solid 1px;
-}
-.el-aside {
-  border: var(--border) solid 1px;
-}
-.el-menu {
-  border-right: none;
-}
-.el-main {
-  padding: var(--gap);
-}
-</style>
