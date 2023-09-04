@@ -24,3 +24,18 @@ $-colors: (
 );
 
 @use './dark.scss';
+
+.el-dialog__headerbtn {
+  font-size: 20px;
+  width: 32px;
+  height: 32px
+}
+
+.el-form-item {
+  flex-direction: column;
+  width: 300px;
+}
+
+.el-form-item__label {
+  justify-content: left;
+}
