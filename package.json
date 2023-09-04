@@ -6,10 +6,31 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
+    "lint:prettier": "prettier --check .",
+    "lint": "yarn lint:js && yarn lint:prettier",
+    "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
   },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
-    "nuxt": "^3.7.0"
+    "@element-plus/nuxt": "^1.0.5",
+    "@nuxt/devtools": "^0.8.2",
+    "@nuxtjs/color-mode": "^3.2.0",
+    "@vueuse/nuxt": "^10.2.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "nuxt": "^3.7.0",
+    "prettier": "^3.0.3",
+    "sass": "^1.66.1"
+  },
+  "dependencies": {
+    "@auth0/auth0-spa-js": "^2.1.2",
+    "@auth0/auth0-vue": "^2.3.1",
+    "@element-plus/icons-vue": "^2.1.0",
+    "@pinia/nuxt": "^0.4.11",
+    "element-plus": "^2.3.9",
+    "mongoose": "^7.5.0",
+    "pinia": "^2.1.6",
+    "vuex": "^4.1.0"
   }
 }
