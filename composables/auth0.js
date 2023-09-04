@@ -10,7 +10,7 @@ async function initAuth0() {
     domain: 'dev-gzmmg20tykutpocn.us.auth0.com',
     clientId: 'ScLlKeBbLB8XvMbmtdzhViCDa9gmgs5G',
     authorizationParams: {
-      redirect_uri: window.location.origin,
+      redirect_uri: config.mainPage,
     }
   });
 
@@ -38,7 +38,7 @@ export function useAuth0() {
 
     async logout() {
       try {
-        await auth0.logout({ returnTo: window.location.origin });
+        await auth0.logout({ returnTo: config.mainPage });
       } catch (error) {
         console.error('Error logging out:', error);
       }

@@ -10,7 +10,8 @@ export default defineNuxtConfig({
     dbName: process.env.DBNAME,
     user: process.env.DBUSERNAME,
     pass: process.env.DBPASSWORD,
-    authSource: process.env.DBAUTHSOURCE
+    authSource: process.env.DBAUTHSOURCE,
+    mainPage: process.env.MAINPAGE
   },
 
   modules: [
