@@ -1,0 +1,76 @@
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+	font-family: 'Open Sans', serif;
+}
+:root {
+  --color-text: #222;
+  --background: white;
+  --border:#DCDFE6;
+  --change-theme-duration: 0.5s;
+  --gap: 15px;
+  .dark {
+    --color-text: white;
+    --background: #222;
+    --border:#DCDFE6;
+    --change-theme-duration: 0.5s;
+  }
+}
+$color: var(--color-text);
+$background: var(--background);
+$border: var(--border);
+$gap: var(--gap);
+
+html.dark {
+  background: $background;
+  color: $color;
+}
+
+a {
+  font-weight: 400;
+  color: var(--el-color-primary);
+}
+
+.link-normal {
+  color: $color;
+  text-decoration: none;
+}
+
+/**
+ ** Header
+ */
+.header{
+  min-height: 48px;
+  height: 100%;
+  right: 20px;
+  width: 100%;
+  display: flex;
+  gap: $gap;
+  justify-content: space-between;
+  align-items: center;
+
+  &-logo {
+      font-family: 'Roboto', sans-serif;
+      font-size: 24px;
+      line-height: 29px;
+  }
+
+  &-breadcrumbs {
+    flex-grow: 1;
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+  }
+}
+
+/**
+ ** Main
+ */
+
+/**
+ * Signin
+ */
+
+
