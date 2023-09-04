@@ -9,9 +9,6 @@ async function initAuth0() {
   auth0 = await createAuth0Client({
     domain: 'dev-gzmmg20tykutpocn.us.auth0.com',
     clientId: 'ScLlKeBbLB8XvMbmtdzhViCDa9gmgs5G',
-    authorizationParams: {
-      redirect_uri: config.mainPage,
-    }
   });
 
   isAuthenticated.value = await auth0.isAuthenticated();
@@ -38,7 +35,7 @@ export function useAuth0() {
 
     async logout() {
       try {
-        await auth0.logout({ returnTo: config.mainPage });
+        await auth0.logout();
       } catch (error) {
         console.error('Error logging out:', error);
       }
