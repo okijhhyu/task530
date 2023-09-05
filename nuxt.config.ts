@@ -1,5 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 // import vue from '@vitejs/plugin-vue'
+const {
+  AUTH0_BASE_URL,
+  AUTH0_ISSUER_BASE_URL,
+  AUTH0_CLIENT_ID,
+  AUTH0_CLIENT_SECRET,
+  AUTH0_AUDIENCE,
+  AUTH0_COOKIE_NAME
+} = process.env
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   // css
@@ -11,7 +20,15 @@ export default defineNuxtConfig({
     user: process.env.DBUSERNAME,
     pass: process.env.DBPASSWORD,
     authSource: process.env.DBAUTHSOURCE,
-    mainPage: process.env.MAINPAGE
+    AUTH0_BASE_URL,
+    AUTH0_ISSUER_BASE_URL,
+    AUTH0_CLIENT_ID,
+    AUTH0_CLIENT_SECRET,
+    AUTH0_AUDIENCE,
+    AUTH0_COOKIE_NAME,
+    public: {
+      AUTH0_COOKIE_NAME
+    }
   },
 
   modules: [
