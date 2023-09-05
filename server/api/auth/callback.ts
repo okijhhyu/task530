@@ -29,27 +29,23 @@ export default defineEventHandler(async (event) => {
       headers: { 'Content-type': 'application/json' },
       body
     })
-    const { access_token, id_token, scope, expires_in, token_type } = await data.json()
-
+    const value = await data.json()
     const JWKS = createRemoteJWKSet(new URL(`${AUTH0_ISSUER_BASE_URL}/.well-known/jwks.json`))
-    const { payload: user } = await jwtVerify(id_token, JWKS, {
+    const { payload: user } = await jwtVerify(value.id_token, JWKS, {
       issuer: `${AUTH0_ISSUER_BASE_URL}/`
     })
-
     const cookie = {
       user,
-      id_token,
-      access_token,
-      scope,
-      expires_in,
-      token_type
+      id_token: value?.id_token,
+      access_token: value?.access_token,
+      scope: value?.scope,
+      expires_in: value?.expires_in,
+      token_type: value?.token_type
     }
-
     const date = new Date()
     date.setDate(date.getDate() + 1)
 
     const sealedCookie = await Iron.seal(cookie, AUTH0_CLIENT_SECRET, Iron.defaults)
-
     setCookie(event, AUTH0_COOKIE_NAME, sealedCookie, {
       path: '/',
       secure: true,
