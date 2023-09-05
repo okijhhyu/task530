@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
       return navigateTo('/private')
     }
   } else {
-    if (!allowedRoutes.includes(to.path)) {
+    if (!allowedRoutes.includes(to.path) && to.path !== '/api/auth/login' && to.path !== '/api/auth/callback') {
       return navigateTo('/login')
     }
   }
