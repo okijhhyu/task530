@@ -37,7 +37,6 @@ export const useModulesStore = defineStore('modules', {
     getModules() {
       try {
       const { data } = useFetch('/api/modules')
-      console.log(data)
       this.setModules(data)
       return data
       } catch(e) {}
