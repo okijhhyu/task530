@@ -5,8 +5,8 @@
       <el-header>
         <div class="header">
           <header-component />
-          </div>
-        </el-header>
+        </div>
+      </el-header>
       <el-main>
         <el-scrollbar>
           <slot />
