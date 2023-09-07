@@ -2,27 +2,65 @@
   <div>
     <el-card>
       <template #header>
-        <div style="display: flex; justify-content: space-between;align-items: center">
+        <div class="flex-items">
           <h1>Modules</h1>
           <el-button type="success" plain @click="openAddDialog()">Add module</el-button>
         </div>
       </template>
-      <el-table :data="modules.data" border style="width: 100%;">
-        <el-table-column label="Section name" prop="sectionName" />
-        <el-table-column width="100px" label="Action" />
+      <el-table :data="modules" border style="width: 100%;">
+        <el-table-column width="100px" sortable label="ID" prop="_id">
+          <template v-slot="scope">
+            <el-tooltip placement="left-start" :content="scope.row._id">
+              <span style="white-space: nowrap; overflow: hidden;">
+                {{ scope.row._id }}
+              </span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column min-width="300px" sortable label="Section name" prop="sectionName" />
+        <el-table-column width="100px" align="center" label="Action" fixed="right">
+          <template v-slot="slot">
+            <div style="display: flex; flex-direction: row;">
+              <el-tooltip content="View">
+                <el-button type="primary" :icon="ElIconView" size="small" text @click="openViewDialog(slot.row._id)" />
+              </el-tooltip>
+              <el-tooltip content="Delete">
+                <el-button type="danger" :icon="ElIconDelete" size="small" text @click="deleteModule(slot.row._id)" />
+              </el-tooltip>
+            </div>
+          </template>
+        </el-table-column>
       </el-table>
     </el-card>
     <client-only>
-      <el-dialog :model-value="dialogVisible">
+      <el-dialog v-model="dialogVisible" @closed="closeModal">
         <template #header>
-          <div style="display: flex; justify-content: space-between;align-items: center">
+          <div class="flex-items">
             <h1>{{  dialogHeader.title  }}</h1>
-            <el-button :type="dialogHeader.type" plain @click="openAddDialog()">{{ dialogHeader.buttonText }}</el-button>
+            <el-button v-if="!modulesStore.currentModule?._id" :type="dialogHeader.type" @click="submit()">{{ dialogHeader.buttonText }}</el-button>
           </div>
         </template>
         <el-form>
           <el-form-item label="Section name">
-            <el-input :model-value="module.sectionName" />
+            <el-input :readonly='!!modulesStore.currentModule?._id' style="width: 240px;" :model-value="modulesStore.currentModule.sectionName" @input="updateCurrentValue('sectionName', $event)"/>
+          </el-form-item>
+          <div class="flex-items">
+            <h3>Fields</h3>
+            <el-input v-if="!modulesStore.currentModule?._id" v-model="fieldLabel" style="width: 240px; height:30px">
+              <template #append>
+                <el-button :icon="ElIconPlus" type="success" plain @click="addField" />
+              </template>
+            </el-input>
+          </div>
+          <el-form-item v-for="(field, index) in modulesStore.currentModule.fields" :key="field.label + index" :label="field.label">
+            <el-select style="width: 240px;" :readonly='!!modulesStore.currentModule?._id' :model-value="field.type" @change="updateFieldType(field.label, $event)">
+              <el-option
+                v-for="item in options"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -31,31 +69,85 @@
 </template>
 <script setup>
   import { useModulesStore } from '~/store/modules'
-  import { useRoute } from 'vue-router'
 
   const modulesStore = useModulesStore()
   let dialogVisible = ref(false)
-  try {
-    await modulesStore.getModules(); // Здесь используйте ваш URL
-  } catch (error) {
-    console.error('Ошибка загрузки данных:', error);
-  }
-  const modules = computed(() => {
-    // Access the breadcrumbs from the Pinia store using getters
-    return modulesStore.modulesList
+  const module = ref({
+      sectionsName: '',
+      fields: []
+    })
+  let fieldLabel = ref('');
+  const options = ['String', 'Number', 'Boolean', 'JSON-html']
+  await nextTick(() =>{
+    try {
+      modulesStore.getModules();
+    } catch (error) {
+      console.error(error);
+    }
   })
 
-  const module = computed(() => {
-    return modulesStore.currentModule
-  })
+  const modules = computed(() => { return Array.isArray(modulesStore?.modulesList?.data) ? modulesStore.modulesList.data : []; })
+
 
   const dialogHeader = computed(() => {
-    return modulesStore.currentModule?.id ? { title : 'Updateing module', buttonText: 'Save changes', type: 'primary' } 
+    return modulesStore.currentModule?._id ? { title : `${modulesStore.currentModule?.sectionName} module`, buttonText: 'Save changes', type: 'primary' } 
       : { title : 'Creating module', buttonText: 'Create module', type: 'success' }
   })
 
   function openAddDialog() {
-    modulesStore.resetCurrentModule()
     dialogVisible.value = true
+  }
+
+  function openViewDialog(id) {
+    const item = modules.value.find(item => item._id === id)
+    if (item._id) {
+      modulesStore.setModule(item)
+      dialogVisible.value = true
+    }
+  }
+
+  function closeModal() {
+    modulesStore.resetCurrentModule()
+    dialogVisible.value = false
+    fieldLabel.value = ''
+  }
+
+  function updateCurrentValue(key, value) {
+    modulesStore.setModule({ ...modulesStore.currentModule, [key]: value })
+  }
+
+  function addField() {
+    if (fieldLabel.value && modulesStore.currentModule.fields.findIndex(({label}) => label === fieldLabel.value) < 0) {
+      updateCurrentValue('fields', [...modulesStore.currentModule.fields, { type: 'String', label: fieldLabel.value }])
+      fieldLabel.value  = ''
+    }
+  }
+
+  function updateFieldType(label, type) {  
+    updateCurrentValue('fields', modulesStore.currentModule.fields.map(field => { 
+      if (field.label === label) {
+        return { label, type }
+      } else {
+        return field
+      }
+    }))
+  }
+
+  async function submit() {
+    try {
+      await modulesStore.createModule({ ...modulesStore.currentModule, id: undefined })
+      await nextTick(async ()=>{
+        await modulesStore.getModules(); // Здесь используйте ваш URL
+      })
+      closeModal()
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  async function deleteModule(id) {
+    await modulesStore.deleteModule(id)
+    await nextTick(async ()=>{
+      await modulesStore.getModules(); // Здесь используйте ваш URL
+    })
   }
 </script>

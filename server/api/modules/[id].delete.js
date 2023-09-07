@@ -1,12 +1,10 @@
 import ModulesModel from "~~/server/models/modules";
-import { readBody } from 'h3'
 
 export default defineEventHandler(
   async (ctx) => {
     try {
-      const body = await readBody(ctx)
-      const newModule = new ModulesModel(body)
-      return await newModule.save()
+      const result = await ModulesModel.findByIdAndRemove(ctx.context.params.id)
+      return { data: result }
     } catch (e) {
       console.log(e)
     }

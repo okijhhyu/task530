@@ -1,15 +1,13 @@
-import useUser from "~~/composables/useUser";
-
 export default defineNuxtRouteMiddleware((to, from) => {
-  const user = useUser()
+  const user = useState('user')
   const allowedRoutes = ['/', '/login']
   if (user.value) {
-    if (allowedRoutes.includes(to.path)) {
-      return navigateTo('/private')
+    if (allowedRoutes.includes(to.path) && to.path !== '/') {
+      return navigateTo('/')
     }
   } else {
     if (!allowedRoutes.includes(to.path)) {
-      return navigateTo('/api/auth/login')
+      return navigateTo('/login')
     }
   }
 })

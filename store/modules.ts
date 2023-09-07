@@ -6,7 +6,7 @@ export interface Module {
 }
 export const useModulesStore = defineStore('modules', {
   state: () => ({
-    modules: [] as Module[],
+    modules: { data: [] as Module[] },
     module: {
       sectionsName: '',
       fields: []
@@ -23,8 +23,12 @@ export const useModulesStore = defineStore('modules', {
   },
 
   actions: {
-    setModules(payload: Module[]) {
+    setModules(payload: { data: Module[] }) {
       this.modules = payload
+    },
+
+    setModule(payload: Module) {
+      this.module = payload
     },
 
     resetCurrentModule() {
@@ -36,8 +40,33 @@ export const useModulesStore = defineStore('modules', {
     
     getModules() {
       try {
-      const { data } = useFetch('/api/modules')
+      const { data } = useFetch('/api/modules',
+      {
+        method: "get",
+      })
       this.setModules(data)
+      return data
+      } catch(e) {}
+    },
+
+    createModule(body: Module) {
+      try {
+      const data = useFetch('/api/modules',
+      {
+        method: "post",
+        body
+      })
+      return data
+      } catch(e) {}
+    },
+
+    deleteModule(id: string) {
+      try {
+      console.log(123)
+      const data = useFetch(`/api/modules/${id}`,
+      {
+        method: "delete"
+      })
       return data
       } catch(e) {}
     }

@@ -38,6 +38,14 @@ a {
   text-decoration: none;
 }
 
+.flex-items {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
 
 /**
  ** Header
