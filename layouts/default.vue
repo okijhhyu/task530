@@ -1,6 +1,8 @@
 <template>
   <el-container style="height: 100vh">
-    <el-aside width="200px">Aside</el-aside>
+    <el-aside width="200px">
+      <aside-component />
+    </el-aside>
     <el-container>
       <el-header>
         <div class="header">
@@ -15,7 +17,8 @@
     </el-container>
   </el-container>
 </template>
-<script setup lang="ts">
+<script setup>
 import HeaderComponent from '@/components/common/header/index.vue'
+import AsideComponent from '@/components/common/aside/index.vue'
 
 </script>

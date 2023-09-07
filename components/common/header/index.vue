@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import Breadrumbs from '@/components/common/breadcrumbs/index.vue'
 const user = computed(() => {
-  return useState('user')
+  return useState('user').value
 })
 
 // import { useAuth0 } from '@/composables/auth0';
