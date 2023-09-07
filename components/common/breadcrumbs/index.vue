@@ -9,7 +9,6 @@
 </template>
 <script setup lang="ts">
 import { useBreadcrumbsStore } from '~/store/breadcrumbs'
-import { useRoute } from 'vue-router'
 
 const breadcrumbsStore = useBreadcrumbsStore()
 
@@ -28,23 +27,21 @@ const createBreadcrumbs = () => {
       }
       breadcrumbs.push(breadcrumb)
     }
-
-    // Use the Pinia store to update breadcrumbs
     breadcrumbsStore.setBreadcrumbs([{ link: '/', title: 'Main' }, ...breadcrumbs])
   } else {
-    // Use the Pinia store to update breadcrumbs
     breadcrumbsStore.setBreadcrumbs([{ link: '/', title: 'Main' }])
   }
 }
 
 const breadcrumbs = computed(() => {
-  // Access the breadcrumbs from the Pinia store using getters
   return breadcrumbsStore.getBreadcrumbs
 })
 
-watch(route, () => {
-  createBreadcrumbs()
-})
+watch(() => route.path,
+  changeBreadcrumbs => {
+    createBreadcrumbs()
+  }
+)
 
 onMounted(() => {
   createBreadcrumbs()
