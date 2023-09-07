@@ -38,14 +38,26 @@ export const useModulesStore = defineStore('modules', {
       } as unknown as Module
     },
     
-    getModules() {
+    async getModules() {
       try {
-      const { data } = useFetch('/api/modules',
-      {
-        method: "get",
-      })
-      this.setModules(data)
-      return data
+        const data = await useFetch('/api/modules',
+        {
+          method: "get",
+        })
+        this.setModules(data)
+        return data
+      } catch(e) {}
+    },
+    
+    async getModuleByName(sectionName: string) {
+      try {
+        const { data } = await useFetch('/api/modules',
+        {
+          method: "get",
+          query: {sectionName}
+        })
+        this.setModule(data?.value)
+        return data
       } catch(e) {}
     },
 
@@ -62,7 +74,6 @@ export const useModulesStore = defineStore('modules', {
 
     deleteModule(id: string) {
       try {
-      console.log(123)
       const data = useFetch(`/api/modules/${id}`,
       {
         method: "delete"

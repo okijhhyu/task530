@@ -18,11 +18,14 @@
           </template>
         </el-table-column>
         <el-table-column min-width="300px" sortable label="Section name" prop="sectionName" />
-        <el-table-column width="100px" align="center" label="Action" fixed="right">
+        <el-table-column width="150px" align="center" label="Action" fixed="right">
           <template v-slot="slot">
             <div style="display: flex; flex-direction: row;">
               <el-tooltip content="View">
                 <el-button type="primary" :icon="ElIconView" size="small" text @click="openViewDialog(slot.row._id)" />
+              </el-tooltip>
+              <el-tooltip content="Go to module">
+                <el-button type="primary" :icon="ElIconLocation" size="small" text @click="$router.push(`/modules/${slot.row.sectionName}`)" />
               </el-tooltip>
               <el-tooltip content="Delete">
                 <el-button type="danger" :icon="ElIconDelete" size="small" text @click="deleteModule(slot.row._id)" />
@@ -53,7 +56,7 @@
             </el-input>
           </div>
           <el-form-item v-for="(field, index) in modulesStore.currentModule.fields" :key="field.label + index" :label="field.label">
-            <el-select style="width: 240px;" :readonly='!!modulesStore.currentModule?._id' :model-value="field.type" @change="updateFieldType(field.label, $event)">
+            <el-select style="width: 240px;" :disabled='!!modulesStore.currentModule?._id' :model-value="field.type" @change="updateFieldType(field.label, $event)">
               <el-option
                 v-for="item in options"
                 :key="item"
@@ -69,15 +72,11 @@
 </template>
 <script setup>
   import { useModulesStore } from '~/store/modules'
-
   const modulesStore = useModulesStore()
+  modulesStore.resetCurrentModule()
   let dialogVisible = ref(false)
-  const module = ref({
-      sectionsName: '',
-      fields: []
-    })
   let fieldLabel = ref('');
-  const options = ['String', 'Number', 'Boolean', 'JSON-html']
+  const options = ['String', 'Number', 'Boolean']
   await nextTick(() =>{
     try {
       modulesStore.getModules();
