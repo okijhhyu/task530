@@ -73,12 +73,18 @@
   </div>
 </template>
 <script setup>
+  // Import necessary store modules
   import { useModulesStore } from '~/store/modules'
+  
+  // Initialize modulesStore and reset current module
   const modulesStore = useModulesStore()
   modulesStore.resetCurrentModule()
+
   let dialogVisible = ref(false)
   let fieldLabel = ref('');
   const options = ['String', 'Number', 'Boolean']
+
+  // Fetch modules data when the component is mounted
   await nextTick(() =>{
     try {
       modulesStore.getModules();
@@ -86,19 +92,22 @@
       console.error(error);
     }
   })
-
+  
+  // Compute modules data
   const modules = computed(() => { return Array.isArray(modulesStore?.modulesList?.data) ? modulesStore.modulesList.data : []; })
 
-
+  // Compute dialog header based on whether it's an view or create operation
   const dialogHeader = computed(() => {
-    return modulesStore.currentModule?._id ? { title : `${modulesStore.currentModule?.sectionName} module`, buttonText: 'Save changes', type: 'primary' } 
+    return modulesStore.currentModule?._id ? { title : `${modulesStore.currentModule?.sectionName} module`, buttonText: '', type: 'primary' } 
       : { title : 'Creating module', buttonText: 'Create module', type: 'success' }
   })
 
+  // Open the add module dialog
   function openAddDialog() {
     dialogVisible.value = true
   }
 
+  // Open the view module dialog with existing data
   function openViewDialog(id) {
     const item = modules.value.find(item => item._id === id)
     if (item._id) {
@@ -107,16 +116,19 @@
     }
   }
 
+  // Close the dialog and reset module data and field label
   function closeModal() {
     modulesStore.resetCurrentModule()
     dialogVisible.value = false
     fieldLabel.value = ''
   }
 
+  // Update the current module's value
   function updateCurrentValue(key, value) {
     modulesStore.setModule({ ...modulesStore.currentModule, [key]: value })
   }
 
+  // Add a new field to the module
   function addField() {
     if (fieldLabel.value && modulesStore.currentModule.fields.findIndex(({label}) => label === fieldLabel.value) < 0) {
       updateCurrentValue('fields', [...modulesStore.currentModule.fields, { type: 'String', label: fieldLabel.value }])
@@ -124,6 +136,7 @@
     }
   }
 
+  // Update the type of a field in the module
   function updateFieldType(label, type) {  
     updateCurrentValue('fields', modulesStore.currentModule.fields.map(field => { 
       if (field.label === label) {
@@ -133,22 +146,25 @@
       }
     }))
   }
-
+  
+  // Handle module submission create
   async function submit() {
     try {
       await modulesStore.createModule({ ...modulesStore.currentModule, id: undefined })
       await nextTick(async ()=>{
-        await modulesStore.getModules(); // Здесь используйте ваш URL
+        await modulesStore.getModules();
       })
       closeModal()
     } catch (e) {
       console.log(e)
     }
   }
+
+  // Delete a module by ID
   async function deleteModule(id) {
     await modulesStore.deleteModule(id)
     await nextTick(async ()=>{
-      await modulesStore.getModules(); // Здесь используйте ваш URL
+      await modulesStore.getModules();
     })
   }
 </script>
