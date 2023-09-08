@@ -44,7 +44,7 @@ export const useSectionsStore = defineStore('sections', {
         const { data } = await useFetch(`/api/vm/${sectionName}`, {
           method: 'get',
         })
-        this.setSections(data?.value || { data: [] })
+        this.setSections(data?.value || { data: [] as any })
         return data
       } catch(e) {}
     },
