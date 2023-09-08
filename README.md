@@ -118,66 +118,6 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 ## Project API
 
-# User Authentication
-
-## Login
-
-  - **Endpoint**: `/api/auth/login`
-  - **Method**: `GET`
-  - **Summary**: User login
-  - **Description**: This endpoint initiates the user login process by redirecting to the authentication provider (Auth0) for user authentication.
-
-  **Example Request:**
-    ```http
-      GET /api/auth/login
-    ```
-  **Example Response:**
-    ```http
-      HTTP/1.1 302 Found
-      Location: https://your-auth0-issuer-url/authorize?response_type=code&client_id=...
-    ```
-## Callback
-
-  - **Endpoint**: `/api/auth/callback`
-  - **Method**: `GET`
-  - **Description**:
-  This endpoint performs the following steps:
-    1. Validates the authentication code received as a query parameter.
-    2. Exchanges the authentication code for user tokens (id_token, access_token).
-    3. Verifies the user's identity using JSON Web Tokens (JWTs).
-    4. Sets a secure cookie containing user information and tokens.
-    5. Redirects the user to the application's homepage.
-
-  **Example Request:**
-    ```http
-      GET /api/auth/callback?code=authentication_code_here
-    ```
-  **Example Response:**
-    ```http
-      HTTP/1.1 302 Found
-      Location: /
-    ```
-
-## Logout
-
-  - **Endpoint**: `/api/auth/logout`
-  - **Method**: `GET`
-  - **Description**:
-  This endpoint performs the following steps:
-    1. Clears the user's session.
-    2. Deletes the authentication cookie.
-    3. Redirects the user to the identity provider's (Auth0) logout endpoint for further authentication provider-based logout, ensuring a complete and secure logout process.
-
-  **Example Request:**
-    ```http
-      GET /api/auth/logout
-    ```
-  **Example Response:**
-    ```http
-      HTTP/1.1 302 Found
-      Location: https://your-auth0-issuer-url/v2/logout?client_id=your-client-id&returnTo=your-application-url
-    ```
-
   - **auth**:
 
     - **callback**:
@@ -205,3 +145,192 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
       - **index.get**:
 
       - **index.post**:
+
+# User Authentication
+
+## Login
+
+  - **Endpoint**: `/api/auth/login`
+  - **Method**: `GET`
+  - **Summary**: User login
+  - **Description**: This endpoint initiates the user login process by redirecting to the authentication provider (Auth0) for user authentication.
+
+  - **Example Request:**
+    ```http
+      GET /api/auth/login
+    ```
+  - **Example Response:**
+    ```http
+      HTTP/1.1 302 Found
+      Location: https://your-auth0-issuer-url/authorize?response_type=code&client_id=...
+    ```
+## Callback
+
+  - **Endpoint**: `/api/auth/callback`
+  - **Method**: `GET`
+  - **Description**:
+  This endpoint performs the following steps:
+    1. Validates the authentication code received as a query parameter.
+    2. Exchanges the authentication code for user tokens (id_token, access_token).
+    3. Verifies the user's identity using JSON Web Tokens (JWTs).
+    4. Sets a secure cookie containing user information and tokens.
+    5. Redirects the user to the application's homepage.
+
+  - **Example Request:**
+    ```http
+      GET /api/auth/callback?code=authentication_code_here
+    ```
+  - **Example Response:**
+    ```http
+      HTTP/1.1 302 Found
+      Location: /
+    ```
+
+## Logout
+
+  - **Endpoint**: `/api/auth/logout`
+  - **Method**: `GET`
+  - **Description**:
+  This endpoint performs the following steps:
+    1. Clears the user's session.
+    2. Deletes the authentication cookie.
+    3. Redirects the user to the identity provider's (Auth0) logout endpoint for further authentication provider-based logout, ensuring a complete and secure logout process.
+
+  - **Example Request:**
+    ```http
+      GET /api/auth/logout
+    ```
+  - **Example Response:**
+    ```http
+      HTTP/1.1 302 Found
+      Location: https://your-auth0-issuer-url/v2/logout?client_id=your-client-id&returnTo=your-application-url
+    ```
+
+# Modules API
+
+## Delete Module by ID
+
+  - **Endpoint**: `/api/modules/:id`
+  - **Method**: `DELETE`
+  - **Description**:
+    This endpoint performs the following steps:
+      1. Receives a request to delete a module specified by its ID.
+      2. Searches for the module in the database based on the provided ID.
+      3. Deletes the module if found.
+      4. Returns the deleted module's data as a response.
+  - **Parameters:**
+    - `_id` (Path Parameter):
+      - **Type**: string
+      - **Description**: The unique ID of the module to delete.
+  - **Example Request:**
+    ```http
+      DELETE /api/modules/_id
+    ```
+  - **Example Response:**
+    ```json
+      {
+        "data": {
+          "_id": "24rf32j4u4h32234uh",
+          "name": "Deleted Module",
+          "fields": []
+        }
+      }
+    ```
+
+## Get Modules
+
+  - **Endpoint**: `/api/modules`
+  - **Method**: `GET`
+  - **Description**:
+  This endpoint performs the following steps:
+    1. Receives a request to retrieve modules.
+    2. Checks if a query parameter `sectionName` is provided.
+    3. If `sectionName` is provided, it retrieves the module with that specific section name.
+    4. If no `sectionName` is provided, it retrieves a list of all modules.
+    5. Returns the retrieved modules as a response.
+  - **Query Parameters:**
+    - `sectionName` (Optional):
+      - **Type**: string
+      - **Description**: The section name to filter modules by.
+
+  - **Example Request:**
+    ```http
+      GET /api/modules?sectionName=example
+    ```
+  - **Example Response:**
+    ```json
+      {
+        "_id": "f4334f43f34f4",
+        "sectionName": "example",
+        "fields": [],
+      }
+    ```
+  
+  - **Example Request:**
+    ```http
+      GET /api/modules
+    ```
+  - **Example Response:**
+    ```json
+    [{
+      "_id": "123",
+      "sectionName": "module1",
+      "fields": []
+    },
+    {
+      "_id": "456",
+      "sectionName": "module2",
+      "fields": []
+    }]
+    ```
+
+## Create Module
+
+  - **Endpoint**: `/api/modules`
+  - **Method**: `POST`
+  - **Description**:
+  This endpoint performs the following steps:
+    1. Receives a request to create a new module.
+    2. Reads the request body to get the data for the new module.
+    3. Creates a new module instance with the provided data.
+    4. Saves the new module to the database.
+    5. Returns the newly created module's data as a response.
+  - **Request Body**
+    - **Type**: JSON
+    - **Description**: The data for the new module to be created.
+
+
+  - **Example Request:**
+    ```http
+      POST /api/modules/index
+      Content-Type: application/json
+
+      {
+        "sectionName": "New Module",
+        "fields":  [{
+          "label": "Field 1",
+          "type": "Value 1"
+        },
+        {
+          "label": "Field 2",
+          "type": 42
+        }]
+      }
+    ```
+  - **Example Response:**
+    ```json
+      {
+        "_id": "123",
+        "sectionName": "New Module",
+        "fields": [
+          {
+            "label": "Field 1",
+            "type": "Value 1"
+          },
+          {
+            "label": "Field 2",
+            "type": 42
+          }
+        ]
+      }
+    ```
