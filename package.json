@@ -26,6 +26,8 @@
     "@element-plus/icons-vue": "^2.1.0",
     "@hapi/iron": "^7.0.1",
     "@pinia/nuxt": "^0.4.11",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
     "element-plus": "^2.3.9",
     "jose": "^4.14.6",
     "mongoose": "^7.5.0",

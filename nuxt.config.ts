@@ -5,13 +5,13 @@ const {
   AUTH0_ISSUER_BASE_URL,
   AUTH0_CLIENT_ID,
   AUTH0_CLIENT_SECRET,
-  AUTH0_COOKIE_NAME
-} = process.env
+  AUTH0_COOKIE_NAME,
+} = process.env;
 
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: {enabled: true},
   // css
-  css: ['~/assets/scss/index.scss', ],
+  css: ['~/assets/scss/index.scss'],
 
   runtimeConfig: {
     dburl: process.env.DATABASE_URL,
@@ -25,15 +25,15 @@ export default defineNuxtConfig({
     AUTH0_CLIENT_SECRET,
     AUTH0_COOKIE_NAME,
     public: {
-      AUTH0_COOKIE_NAME
-    }
+      AUTH0_COOKIE_NAME,
+    },
   },
 
   modules: [
     '@element-plus/nuxt',
     '@vueuse/nuxt',
     '@nuxtjs/color-mode',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
   ],
   vite: {
     // vue: {
@@ -48,7 +48,7 @@ export default defineNuxtConfig({
           additionalData: `@use "@/assets/scss/element/index.scss" as element;`,
         },
       },
-    }
+    },
   },
   // vue: {
   //   compilerOptions: {
@@ -66,4 +66,4 @@ export default defineNuxtConfig({
     importStyle: 'scss',
     themes: ['dark'],
   },
-})
+});

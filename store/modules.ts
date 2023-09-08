@@ -1,21 +1,21 @@
 // Import necessary modules
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia';
 
 // Define the interface for a module
 export interface Module {
   id?: string
   sectionName: string
-  fields: { type: 'String' | 'Number' | 'Boolean' | 'JSON-html', label: string }[]
+  fields: { type: 'String' | 'Number' | 'Boolean', label: string }[]
 }
 
 // Create a Pinia store named 'modules'
 export const useModulesStore = defineStore('modules', {
   // Define the initial state of the store
   state: () => ({
-    modules: { data: [] as Module[] }, // Initialize modules as an empty array
+    modules: {data: [] as Module[]}, // Initialize modules as an empty array
     module: {
       sectionsName: '',
-      fields: []
+      fields: [],
     } as unknown as Module, // Initialize module with default values
   }),
 
@@ -23,11 +23,11 @@ export const useModulesStore = defineStore('modules', {
   getters: {
     // Getter to retrieve the list of modules
     modulesList(state) {
-      return state.modules
+      return state.modules;
     },
     // Getter to retrieve the current module
     currentModule(state) {
-      return state.module
+      return state.module;
     },
   },
 
@@ -35,42 +35,42 @@ export const useModulesStore = defineStore('modules', {
   actions: {
     // Action to set the list of modules in the state
     setModules(payload: { data: Module[] }) {
-      this.modules = payload
+      this.modules = payload;
     },
 
     // Action to set the current module in the state
     setModule(payload: Module) {
-      this.module = payload
+      this.module = payload;
     },
 
     // Action to reset the current module to default values
     resetCurrentModule() {
       this.module = {
         sectionsName: '',
-        fields: []
-      } as unknown as Module
+        fields: [],
+      } as unknown as Module;
     },
-    
+
     // Action to fetch a list of modules from the API
     async getModules() {
       try {
         const data = await useFetch('/api/modules', {
           method: 'get',
-        })
-        this.setModules(data as unknown as { data: Module[] })
-        return data
+        });
+        this.setModules(data as unknown as { data: Module[] });
+        return data;
       } catch (e) {}
     },
-    
+
     // Action to fetch a module by name from the API
     async getModuleByName(sectionName: string) {
       try {
-        const { data } = await useFetch('/api/modules', {
+        const {data} = await useFetch('/api/modules', {
           method: 'get',
-          query: { sectionName }
-        })
-        this.setModule(data?.value as unknown as Module)
-        return data
+          query: {sectionName},
+        });
+        this.setModule(data?.value as unknown as Module);
+        return data;
       } catch (e) {}
     },
 
@@ -79,9 +79,9 @@ export const useModulesStore = defineStore('modules', {
       try {
         const data = useFetch('/api/modules', {
           method: 'post',
-          body
-        })
-        return data
+          body,
+        });
+        return data;
       } catch (e) {}
     },
 
@@ -89,10 +89,10 @@ export const useModulesStore = defineStore('modules', {
     deleteModule(id: string) {
       try {
         const data = useFetch(`/api/modules/${id}`, {
-          method: 'delete'
-        })
-        return data
+          method: 'delete',
+        });
+        return data;
       } catch (e) {}
-    }
+    },
   },
-})
+});

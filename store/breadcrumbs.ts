@@ -1,5 +1,5 @@
 // Import necessary modules
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia';
 
 // Define the interface for breadcrumb items
 interface Breadcrumbs {
@@ -11,14 +11,15 @@ interface Breadcrumbs {
 export const useBreadcrumbsStore = defineStore('breadcrumbs', {
   // Define the initial state of the store
   state: () => ({
-    breadcrumbs: [] as Breadcrumbs[], // Initialize breadcrumbs as an empty array
+    breadcrumbs: [] as Breadcrumbs[],
+    // Initialize breadcrumbs as an empty array
   }),
 
   // Define getters to retrieve data from the state
   getters: {
     // Getter to retrieve the breadcrumbs
     getBreadcrumbs(state) {
-      return state.breadcrumbs
+      return state.breadcrumbs;
     },
   },
 
@@ -26,7 +27,7 @@ export const useBreadcrumbsStore = defineStore('breadcrumbs', {
   actions: {
     // Action to set the breadcrumbs in the state
     setBreadcrumbs(payload: Breadcrumbs[]) {
-      this.breadcrumbs = payload
+      this.breadcrumbs = payload;
     },
   },
-})
+});

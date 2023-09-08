@@ -23,9 +23,11 @@ module.exports = {
   'parserOptions': {
     'ecmaVersion': 'latest',
     'sourceType': 'module',
+    'parser': '@typescript-eslint/parser',
   },
   'plugins': [
     'vue',
+    '@typescript-eslint',
   ],
   'rules': {
     'vue/multi-word-component-names': 'off',
