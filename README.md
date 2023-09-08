@@ -2,6 +2,12 @@
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
+# Node
+
+nvm install 18
+
+nvm use 18
+
 ## Setup
 
 Make sure to install the dependencies:
