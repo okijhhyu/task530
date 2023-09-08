@@ -134,7 +134,48 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
   **Example Response:**
     ```http
       HTTP/1.1 302 Found
-      Location: https://dev-gzmmg20tykutpocn.us.auth0.com/authorize?response_type=code&client_id=...
+      Location: https://your-auth0-issuer-url/authorize?response_type=code&client_id=...
+    ```
+## Callback
+
+  - **Endpoint**: `/api/auth/callback`
+  - **Method**: `GET`
+  - **Description**:
+  This endpoint performs the following steps:
+    1. Validates the authentication code received as a query parameter.
+    2. Exchanges the authentication code for user tokens (id_token, access_token).
+    3. Verifies the user's identity using JSON Web Tokens (JWTs).
+    4. Sets a secure cookie containing user information and tokens.
+    5. Redirects the user to the application's homepage.
+
+  **Example Request:**
+    ```http
+      GET /api/auth/callback?code=authentication_code_here
+    ```
+  **Example Response:**
+    ```http
+      HTTP/1.1 302 Found
+      Location: /
+    ```
+
+## Logout
+
+  - **Endpoint**: `/api/auth/logout`
+  - **Method**: `GET`
+  - **Description**:
+  This endpoint performs the following steps:
+    1. Clears the user's session.
+    2. Deletes the authentication cookie.
+    3. Redirects the user to the identity provider's (Auth0) logout endpoint for further authentication provider-based logout, ensuring a complete and secure logout process.
+
+  **Example Request:**
+    ```http
+      GET /api/auth/logout
+    ```
+  **Example Response:**
+    ```http
+      HTTP/1.1 302 Found
+      Location: https://your-auth0-issuer-url/v2/logout?client_id=your-client-id&returnTo=your-application-url
     ```
 
   - **auth**:
