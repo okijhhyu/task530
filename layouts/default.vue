@@ -18,7 +18,7 @@
   </el-container>
 </template>
 <script setup>
-import HeaderComponent from '@/components/common/header/index.vue'
-import AsideComponent from '@/components/common/aside/index.vue'
+import HeaderComponent from '@/components/common/header/index.vue';
+import AsideComponent from '@/components/common/aside/index.vue';
 
 </script>

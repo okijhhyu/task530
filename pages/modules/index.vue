@@ -94,12 +94,14 @@
   })
   
   // Compute modules data
-  const modules = computed(() => { return Array.isArray(modulesStore?.modulesList?.data) ? modulesStore.modulesList.data : []; })
+  const modules = computed(() => { return Array.isArray(modulesStore?.modulesList?.data) ?
+    modulesStore.modulesList.data : []; })
 
   // Compute dialog header based on whether it's an view or create operation
   const dialogHeader = computed(() => {
-    return modulesStore.currentModule?._id ? { title : `${modulesStore.currentModule?.sectionName} module`, buttonText: '', type: 'primary' } 
-      : { title : 'Creating module', buttonText: 'Create module', type: 'success' }
+    return modulesStore.currentModule?._id ? 
+      { title : `${modulesStore.currentModule?.sectionName} module`, buttonText: '', type: 'primary' } :
+       { title : 'Creating module', buttonText: 'Create module', type: 'success' }
   })
 
   // Open the add module dialog
@@ -130,7 +132,8 @@
 
   // Add a new field to the module
   function addField() {
-    if (fieldLabel.value && modulesStore.currentModule.fields.findIndex(({label}) => label === fieldLabel.value) < 0) {
+    if (fieldLabel.value &&
+      modulesStore.currentModule.fields.findIndex(({label}) => label === fieldLabel.value) < 0) {
       updateCurrentValue('fields', [...modulesStore.currentModule.fields, { type: 'String', label: fieldLabel.value }])
       fieldLabel.value  = ''
     }
@@ -146,7 +149,7 @@
       }
     }))
   }
-  
+
   // Handle module submission create
   async function submit() {
     try {

@@ -1,39 +1,43 @@
-import { readBody } from 'h3'
-import mongoose from "mongoose"
-import ModulesModel from "~~/server/models/modules";
+import {readBody} from 'h3';
+import mongoose from 'mongoose';
+import ModulesModel from '~~/server/models/modules';
 
 export default defineEventHandler(
-  async (ctx) => {
-    try {
+    async (ctx) => {
+      try {
       // Find the module query based on the sectionName
-      const sectionValue = await ModulesModel.findOne({ sectionName: ctx.context.params.module })
-      
-      // Create an object to define schema fields
-      const schemaFields = {};
+        const sectionValue = await ModulesModel
+            .findOne({sectionName: ctx.context.params.module});
 
-      // Iterate through the fields of the query and build the schemaFields object
-      sectionValue.fields.forEach(field => {
-        schemaFields[field.label] = {
-          type: field.type
-        };
-      });
+        // Create an object to define schema fields
+        const schemaFields = {};
 
-      // Define the SectionModel based on the module's sectionName
-      const SectionModel =
+        // Iterate through the fields of the query and
+        // build the schemaFields object
+        sectionValue.fields.forEach((field) => {
+          schemaFields[field.label] = {
+            type: field.type,
+          };
+        });
+
+        // Define the SectionModel based on the module's sectionName
+        const SectionModel =
         mongoose.models[ctx.context.params.module] ||
-        mongoose.model(ctx.context.params.module, new mongoose.Schema(schemaFields));
+        mongoose.model(ctx.context.params.module,
+            new mongoose.Schema(schemaFields));
 
-      // Read the request body
-      const body = await readBody(ctx)
+        // Read the request body
+        const body = await readBody(ctx);
 
-      // Create a new module instance using the SectionModel schema
-      const newModule = new SectionModel(body)
+        // Create a new module instance using the SectionModel schema
+        const newModule = new SectionModel(body);
 
-      // Save the new module to the database
-      return await newModule.save()
-    } catch (e) {
-      // Handle any errors that occur during the process and log them to the console
-      console.log(e)
-    }
-  }
-)
+        // Save the new module to the database
+        return await newModule.save();
+      } catch (e) {
+      // Handle any errors
+      // that occur during the process and log them to the console
+        console.log(e);
+      }
+    },
+);
