@@ -16,8 +16,7 @@ export default defineEventHandler(async (event) => {
   // Redirect the user to the Auth0 logout URL
   event.node.res
       .writeHead(302, {
-        Location: `${AUTH0_ISSUER_BASE_URL}/v2/logout?client_id=
-        ${AUTH0_CLIENT_ID}&returnTo=${AUTH0_BASE_URL}`,
+        Location: `${AUTH0_ISSUER_BASE_URL}/v2/logout?client_id=${AUTH0_CLIENT_ID}&returnTo=${AUTH0_BASE_URL}`,
       })
       .end();
 });
