@@ -36,12 +36,6 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
   vite: {
-    // vue: {
-    //   customElement: true,
-    // },
-    // vueJsx: {
-    //     mergeProps: true,
-    // },
     css: {
       preprocessorOptions: {
         scss: {
@@ -50,13 +44,6 @@ export default defineNuxtConfig({
       },
     },
   },
-  // vue: {
-  //   compilerOptions: {
-  //     isCustomElement: (tag) => {
-  //         return tag.includes('-');
-  //     },
-  //   },
-  // },
   typescript: {
     strict: true,
     shim: false,
