@@ -14,8 +14,7 @@ export default defineEventHandler(
       const SectionModel =
         mongoose.models[ctx.context.params.module] ||
         mongoose.model(ctx.context.params.module  , new mongoose.Schema(schemaFields));
-      const data = await SectionModel.findByIdAndRemove(ctx.context.params.id)
-      return { data }
+      return await SectionModel.findByIdAndRemove(ctx.context.params.id)
     } catch (e) {
       console.log(e)
     }

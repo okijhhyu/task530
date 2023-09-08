@@ -334,3 +334,153 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
         ]
       }
     ```
+# Sections API (Which is created by modules API)
+## Get Sections
+
+  - **Endpoint**: `/api/vm/:module`
+  - **Method**: `GET`
+  - **Description**:
+  This endpoint performs the following steps:
+    1. Receives a request to retrieve modules for a specific section.
+    2. Retrieves the schema fields for the module associated with the provided section name from the database.
+    3. Constructs a schema for the module using the retrieved fields.
+    4. Uses Mongoose to create or retrieve a model for the module using the constructed schema.
+    5. Retrieves all modules belonging to the specified section.
+    6. Returns the retrieved modules as a response.
+  - **Parameters:**
+    - `module` (Path Parameter):
+      - **Type**: string
+      - **Description**: The name or identifier of the section to retrieve modules for.
+
+
+  - **Example Request:**
+    ```http
+      GET /api/vm/sectionName
+    ```
+  - **Example Response:**
+    ```json
+    {
+      "data": [
+        {
+          "_id": "123",
+          "field1": "Value 1",
+          "field2": 42
+        },
+        {
+          "_id": "456",
+          "field1": "Value 2",
+          "field2": 24
+        }
+      ]
+    }
+    ```
+
+## Create Section
+
+  - **Endpoint**: `/api/vm/:module`
+  - **Method**: `POST`
+  - **Description**:
+  This endpoint performs the following steps:
+    1. Receives a request to create a new module for a specific section.
+    2. Retrieves the schema fields for the module associated with the provided section name from the database.
+    3. Constructs a schema for the module using the retrieved fields.
+    4. Uses Mongoose to create or retrieve a model for the module using the constructed schema.
+    5. Reads the request body to get the data for the new module.
+    6. Creates a new module instance with the provided data.
+    7. Saves the new module to the database.
+    8. Returns the newly created module's data as a response.
+  - **Parameters:**
+    - `module` (Path Parameter):
+      - **Type**: string
+      - **Description**: The name or identifier of the section to retrieve modules for.
+  - **Request Body:**
+    - **Type**: JSON
+    - **Description**: The data for the new module to be created.
+  - **Example Request:**
+    ```http
+      POST /api/vm/sectionName
+      Content-Type: application/json
+      {
+        "field1": "Value 1",
+        "field2": 42
+      }
+    ```
+  - **Example Response:**
+    ```json
+    {
+      "_id": "123",
+      "field1": "Value 1",
+      "field2": 42
+    }
+    ```
+## Update Section
+
+  - **Endpoint**: `/api/vm/:module/:id`
+  - **Method**: `PUT`
+  - **Description**:
+  This endpoint performs the following steps:
+    1. Receives a request to update an existing module by its ID within a specific section.
+    2. Retrieves the schema fields for the module associated with the provided section name from the database.
+    3. Constructs a schema for the module using the retrieved fields.
+    4. Uses Mongoose to create or retrieve a model for the module using the constructed schema.
+    5. Reads the request body to get the updated data for the module.
+    6. Updates the existing module with the provided data.
+    7. Returns the updated module's data as a response.
+  - **Parameters:**
+    - `module` (Path Parameter):
+      - **Type**: string
+      - **Description**: The name or identifier of the section to update the module within.
+    - `id` (Path Parameter):
+      - **Type**: string
+      - **Description**: The unique identifier of the module to update.
+  - **Request Body:**
+    - **Type**: JSON
+    - **Description**: The updated data for the module.
+  - **Example Request:**
+    ```http
+      PUT /api/vm/sectionName/123
+      Content-Type: application/json
+      {
+        "field1": "Updated Value 1",
+        "field2": 55
+      }
+    ```
+  - **Example Response:**
+    ```json
+    {
+      "_id": "123",
+      "field1": "Updated Value 1",
+      "field2": 55
+    }
+    ```
+## Delete Section
+
+  - **Endpoint**: `/api/vm/:module/:id`
+  - **Method**: `DELETE`
+  - **Description**:
+  This endpoint performs the following steps:
+    1. Receives a request to delete an existing module by its ID within a specific section.
+    2. Retrieves the schema fields for the module associated with the provided section name from the database.
+    3. Constructs a schema for the module using the retrieved fields.
+    4. Uses Mongoose to create or retrieve a model for the module using the constructed schema.
+    5. Deletes the module with the provided ID.
+    6. Returns a success response indicating the deletion.
+  - **Parameters:**
+    - `module` (Path Parameter):
+      - **Type**: string
+      - **Description**: The name or identifier of the section to update the module within.
+    - `id` (Path Parameter):
+      - **Type**: string
+      - **Description**: The unique identifier of the module to update.
+  - **Example Request:**
+    ```http
+      DELETE /api/vm/sectionName/123
+    ```
+  - **Example Response:**
+    ```json
+      {
+        "_id": "24rf32j4u4h32234uh",
+        "field1": "Deleted Module",
+        "field2": 123,
+      }     
+    ```
