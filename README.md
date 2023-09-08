@@ -118,24 +118,24 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 ## Project API
 
-  # User Authentication
+# User Authentication
 
-    ## Login
+## Login
 
-      - **Endpoint**: `/api/auth/login`
-      - **Method**: `GET`
-      - **Summary**: User login
-      - **Description**: This endpoint initiates the user login process by redirecting to the authentication provider (Auth0) for user authentication.
+  - **Endpoint**: `/api/auth/login`
+  - **Method**: `GET`
+  - **Summary**: User login
+  - **Description**: This endpoint initiates the user login process by redirecting to the authentication provider (Auth0) for user authentication.
 
-      **Example Request:**
-        ```http
-          GET /api/auth/login
-        ```
-      **Example Response:**
-        ```http
-          HTTP/1.1 302 Found
-          Location: https://dev-gzmmg20tykutpocn.us.auth0.com/authorize?response_type=code&client_id=...
-        ```
+  **Example Request:**
+    ```http
+      GET /api/auth/login
+    ```
+  **Example Response:**
+    ```http
+      HTTP/1.1 302 Found
+      Location: https://dev-gzmmg20tykutpocn.us.auth0.com/authorize?response_type=code&client_id=...
+    ```
 
   - **auth**:
 
