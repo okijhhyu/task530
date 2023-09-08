@@ -55,16 +55,18 @@
               </template>
             </el-input>
           </div>
-          <el-form-item v-for="(field, index) in modulesStore.currentModule.fields" :key="field.label + index" :label="field.label">
-            <el-select style="width: 240px;" :disabled='!!modulesStore.currentModule?._id' :model-value="field.type" @change="updateFieldType(field.label, $event)">
-              <el-option
-                v-for="item in options"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
-          </el-form-item>
+          <div class="form-items">
+            <el-form-item v-for="(field, index) in modulesStore.currentModule.fields" :key="field.label + index" :label="field.label">
+              <el-select style="width: 100%;" :disabled='!!modulesStore.currentModule?._id' :model-value="field.type" @change="updateFieldType(field.label, $event)">
+                <el-option
+                  v-for="item in options"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
+            </el-form-item>
+          </div>
         </el-form>
       </el-dialog>
     </client-only>

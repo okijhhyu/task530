@@ -49,10 +49,12 @@
           </div>
         </template>
         <el-form>
-          <el-form-item v-for="(field, index) in modulesStore.currentModule.fields" :key="'form' + field.label + index" :label="field.label">
-            <el-input v-if="field.type !== 'Boolean'" style="width: 240px;" :type="field.type === 'Number' ? 'number' : 'string'" :model-value="sectionStore.currentSection[field.label]" @input="updateCurrentValue(field.label, field.type === 'Number' ? +$event : $event)" />
-            <el-switch v-else :model-value="sectionStore.currentSection[field.label]" @change="updateCurrentValue(field.label, $event)" />
-          </el-form-item>
+          <div class="form-items">
+            <el-form-item v-for="(field, index) in modulesStore.currentModule.fields" :key="'form' + field.label + index" :label="field.label">
+              <el-input v-if="field.type !== 'Boolean'" :type="field.type === 'Number' ? 'number' : 'string'" :model-value="sectionStore.currentSection[field.label]" @input="updateCurrentValue(field.label, field.type === 'Number' ? +$event : $event)" />
+              <el-switch v-else :model-value="sectionStore.currentSection[field.label]" @change="updateCurrentValue(field.label, $event)" />
+            </el-form-item>
+          </div>
         </el-form>
       </el-dialog>
     </client-only>
