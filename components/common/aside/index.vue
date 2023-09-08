@@ -5,14 +5,16 @@
     class="el-menu-vertical-demo"
     unique-opened
   >
-    <el-menu-item index="/">
-      <img width="40px" height="40px" class="avatar-menu" src="https://www.longevityintime.org/static/logo/UA/Logo512x256.svg">
-      <template #title>
-        <span style="padding-left: 15px" class="avatar-menu__title">
-          Main page
-        </span>
-      </template>
-    </el-menu-item>
+    <nuxt-link to="/" class="link">
+      <el-menu-item index="/">
+        <img width="40px" height="40px" class="avatar-menu" src="https://www.longevityintime.org/static/logo/UA/Logo512x256.svg">
+        <template #title>
+          <span style="padding-left: 15px" class="avatar-menu__title">
+            Main page
+          </span>
+        </template>
+      </el-menu-item>
+    </nuxt-link>
     <nuxt-link to="/modules" class="link">
       <el-menu-item>
         <template #title>
