@@ -7,7 +7,12 @@
   >
     <nuxt-link to="/" class="link">
       <el-menu-item index="/">
-        <img width="40px" height="40px" class="avatar-menu" src="https://www.longevityintime.org/static/logo/UA/Logo512x256.svg">
+        <img
+          width="40px"
+          height="40px"
+          class="avatar-menu"
+          src="https://www.longevityintime.org/static/logo/UA/Logo512x256.svg"
+        >
         <template #title>
           <span style="padding-left: 15px" class="avatar-menu__title">
             Main page
