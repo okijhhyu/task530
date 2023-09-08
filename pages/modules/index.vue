@@ -114,6 +114,20 @@
               v-for="(field, index) in modulesStore.currentModule.fields"
               :key="field.label + index" :label="field.label"
             >
+              <template #label>
+                {{field.label}}
+                <template v-if="!modulesStore.currentModule?._id">
+                  <el-tooltip content="Delete field">
+                    <el-button
+                      type="danger"
+                      :icon="ElIconDelete"
+                      size="small"
+                      text
+                      @click="deleteField(index)"
+                    />
+                  </el-tooltip>
+                </template>
+              </template>
               <el-select
                 :model-value="field.type"
                 style="width: 100%;"
@@ -137,7 +151,6 @@
 <script setup>
 // Import necessary store modules
 import {useModulesStore} from '~/store/modules';
-
 // Initialize modulesStore and reset current module
 const modulesStore = useModulesStore();
 modulesStore.resetCurrentModule();
@@ -205,7 +218,11 @@ function addField() {
     fieldLabel.value = '';
   }
 }
-
+// Delete a new field from the module
+function deleteField(index) {
+  updateCurrentValue('fields', modulesStore.currentModule.fields
+      .filter((_item, itemIndex) => index !== itemIndex ));
+}
 // Update the type of a field in the module
 function updateFieldType(label, type) {
   updateCurrentValue('fields',
