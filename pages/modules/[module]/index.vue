@@ -130,14 +130,6 @@ function forceRerender() {
   });
 }
 
-// Delete a section by ID
-async function deleteSection(id) {
-  await sectionStore.deleteSection(route.params.module, id);
-  await nextTick(async ()=>{
-    await sectionStore.getSections(route.params.module);
-  });
-}
-
 const open = () => {
   ElMessageBox.alert(`Бедствие - ${modulesStore.currentModule.catastrophe} Оснащение - ${modulesStore.currentModule.bunker}`, 'Информация о бункере', {
     // if you want to disable its autofocus

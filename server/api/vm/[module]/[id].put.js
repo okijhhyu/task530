@@ -22,6 +22,8 @@ export default defineEventHandler(
             fact: {type: Object, required: true},
             baggage: {type: Object, required: true},
             name: {type: String, required: false},
+            action1: {type: Object, required: false},
+            action2: {type: Object, required: false},
           }));
 
         // Read the request body

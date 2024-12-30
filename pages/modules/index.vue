@@ -157,11 +157,10 @@ const generateCharacters = async (sectionName, numCharacters) => {
   { "text": "Обменяться характером c выбранным человеком", "action": "Обмен", "character": "character" },
   { "text": "Обменяться хобби c выбранным человеком", "action": "Обмен", "character": "hobby" },
   { "text": "Обменяться фобией c выбранным человеком ", "action": "Обмен", "character": "phobia" },
-  { "text": "Обменять факт c выбранным человеком", "action": "Обмен", "character": "fact" },
-  { "text": "Обменять багажом с выбранным человеком", "action": "Обмен", "character": "baggage" },
-  { "text": "Обменять проффесию с выбранным человеком", "action": "Обмен", "character": "profession" },
+  { "text": "Обменяться фактом c выбранным человеком", "action": "Обмен", "character": "fact" },
+  { "text": "Обменяться багажом с выбранным человеком", "action": "Обмен", "character": "baggage" },
+  { "text": "Обменяться проффессией с выбранным человеком", "action": "Обмен", "character": "profession" },
   { "text": "Обменять био характеристику с выбранным человеком", "action": "Обмен", "character": "bio" },
-  { "text": "Обменять случайную открытую характеристику с выбранным человеком", "action": "Обмен", "character": "random" },
   { "text": "Обменять характеристику на выбор с выбранным человеком", "action": "Обмен", "character": "certain" },
   
   { "text": "Заменить свое здоровье на случайное", "action": "Заменить свою", "character": "health" },
@@ -172,7 +171,6 @@ const generateCharacters = async (sectionName, numCharacters) => {
   { "text": "Заменить свой багаж на случайный", "action": "Заменить свою", "character": "baggage" },
   { "text": "Заменить свою проффессию на случайную", "action": "Заменить свою", "character": "profession" },
   { "text": "Заменить свою био характеристику на случайную", "action": "Заменить свою", "character": "bio" },
-  { "text": "Заменить свою случайную характеристику на случайную", "action": "Заменить свою", "character": "random" },
   { "text": "Заменить свою выбранную характеристику на случайную", "action": "Заменить свою", "character": "certain" },
   
   { "text": "Заменить чужое здоровье на случайное", "action": "Заменить чужое", "character": "health" },
@@ -183,15 +181,14 @@ const generateCharacters = async (sectionName, numCharacters) => {
   { "text": "Заменить чужой багаж на случайный", "action": "Заменить чужое", "character": "baggage" },
   { "text": "Заменить чужую проффессию на случайную", "action": "Заменить чужое", "character": "profession" },
   { "text": "Заменить чужую био характеристику на случайную", "action": "Заменить чужое", "character": "bio" },
-  { "text": "Заменить чужую случайную характеристику на случайную", "action": "Заменить чужое", "character": "random" },
   { "text": "Заменить чужую выбранную характеристику на случайную", "action": "Заменить чужое", "character": "certain" },
   
   { "text": "Все игроки обмениваются открытым здоровьем", "action": "Обменяться", "character": "health" },
   { "text": "Все игроки обмениваются открытыми характерами", "action": "Обменяться", "character": "character" },
-  { "text": "Все игроки обмениваются открытыми хобби", "action": "Обменяться", "character": "hobby" },
+  { "text": "Все игроки обмениваются открытым хобби", "action": "Обменяться", "character": "hobby" },
   { "text": "Все игроки обмениваются открытыми фобиями", "action": "Обменяться", "character": "phobia" },
   { "text": "Все игроки обмениваются открытыми фактами", "action": "Обменяться", "character": "fact" },
-  { "text": "Все игроки обмениваются открытымми багажами", "action": "Обменяться", "character": "baggage" },
+  { "text": "Все игроки обмениваются открытыми багажами", "action": "Обменяться", "character": "baggage" },
   { "text": "Все игроки обмениваются открытыми проффессиями", "action": "Обменяться", "character": "profession" },
   { "text": "Все игроки обмениваются открытыми био характеристиками", "action": "Обменяться", "character": "bio" },
   
@@ -203,7 +200,6 @@ const generateCharacters = async (sectionName, numCharacters) => {
   { "text": "Скопировать чужой багаж", "action": "Скопировать", "character": "baggage" },
   { "text": "Скопировать чужую проффессию", "action": "Скопировать", "character": "profession" },
   { "text": "Скопировать чужую био характеристику", "action": "Скопировать", "character": "bio" },
-  { "text": "Скопировать чужую случайную характеристику на случайную", "action": "Скопировать", "character": "random" },
   { "text": "Скопировать чужую выбранную характеристику на случайную", "action": "Скопировать", "character": "certain" },
 
   { "text": "Откройте здоровье выбранного игрока", "action": "Открыть", "character": "health" },
@@ -212,10 +208,9 @@ const generateCharacters = async (sectionName, numCharacters) => {
   { "text": "Откройте фобию выбранного игрока", "action": "Открыть", "character": "phobia" },
   { "text": "Откройте факт выбранного игрока", "action": "Открыть", "character": "fact" },
   { "text": "Откройте багаж выбранного игрока", "action": "Открыть", "character": "baggage" },
-  { "text": "Откройте проффессию выбранного игрока", "action": "Скопировать", "character": "profession" },
-  { "text": "Откройте био характеристику выбранного игрока", "action": "Скопировать", "character": "bio" },
-  { "text": "Откройте случайную характеристику выбранного игрока", "action": "Скопировать", "character": "random" },
-  { "text": "Откройте выбранную характеристику выбранного игрока", "action": "Скопировать", "character": "certain" },
+  { "text": "Откройте проффессию выбранного игрока", "action": "Открыть", "character": "profession" },
+  { "text": "Откройте био характеристику выбранного игрока", "action": "Открыть", "character": "bio" },
+  { "text": "Откройте выбранную характеристику выбранного игрока", "action": "Открыть", "character": "certain" },
 ]
   let genders = ["Мужчина", "Женщина"];
   const half = Math.ceil(numCharacters / 2);
@@ -227,9 +222,8 @@ const generateCharacters = async (sectionName, numCharacters) => {
     const age = Math.floor(Math.random() * 75) + 16;
     const health = randomFromArray(availableHealths).name;
     const severity = health !== "Отличное" ? Math.floor(Math.random() * 90) + 10 : null;
-    const randomAction1 = randomFromArray[actions];
-    const randomAction2 = randomFromArray[actions];
-
+    const randomAction1 = randomFromArray(actions);
+    const randomAction2 = randomFromArray(actions);
     const character = {
       player: index + 1,
       xod: (index + 1) === 1,

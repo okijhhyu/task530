@@ -3,7 +3,7 @@
     <h1 class='title'><el-button plain @click="open">Бункер</el-button><el-button plain @click="refreshData">Обновить данные</el-button></h1>
     <client-only>
       <el-carousel ref="carusel" type="card" height="80vh" :autoplay="false" @change="changeRoute">
-        <el-carousel-item v-for="item in sectionStore.sectionList.data" :key="item">
+        <el-carousel-item v-for="item in sections" :key="item">
           <div class="card">
             <h3>Игрок: {{ item.player }} <strong><span v-if="item.player === lastSegment || item.profession.visible ">{{ item.profession.name }}</span>
                 <el-button
@@ -11,7 +11,122 @@
                   @click="changeVisible('profession', item)"
                 >
                   Открыть
-                </el-button></strong></h3>
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.profession.visible && 
+                    currentPlayer.profession.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Скопировать' && 
+                    (currentPlayer.action1.character === 'profession' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="copy('profession', item, 'action1')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.profession.visible && 
+                    currentPlayer.profession.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Скопировать' && 
+                    (currentPlayer.action2.character === 'profession' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="copy('profession', item, 'action2')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.profession.visible && 
+                    currentPlayer.profession.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Обмен' && 
+                    (currentPlayer.action1.character === 'profession' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="exchange('profession', item, 'action1')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.profession.visible && 
+                    currentPlayer.profession.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Обмен' && 
+                    (currentPlayer.action2.character === 'profession' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="exchange('profession', item, 'action2')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.profession.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Открыть' && 
+                    (currentPlayer.action1.character === 'profession' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="openCard('profession', item, 'action1')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.profession.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Открыть' && 
+                    (currentPlayer.action2.character === 'profession' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="openCard('profession', item, 'action2')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.profession.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить чужое' && 
+                    (currentPlayer.action1.character === 'profession' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('profession', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.profession.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить чужое' && 
+                    (currentPlayer.action2.character === 'profession' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('profession', item, 'action2')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.profession.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить свою' && 
+                    (currentPlayer.action1.character === 'profession' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('profession', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.profession.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить свою' && 
+                    (currentPlayer.action2.character === 'profession' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('profession', item, 'action2')"
+                >
+                 Заменить
+                </el-button>
+                </strong></h3>
             <ul>
               <li><strong>Био характеристика:</strong> <span v-if="item.player === lastSegment || item.bio.visible">{{ item.bio.name }}</span>
                 <el-button
@@ -20,6 +135,120 @@
                 >
                   Открыть
                 </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.bio.visible && 
+                    currentPlayer.bio.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Скопировать' && 
+                    (currentPlayer.action1.character === 'bio' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="copy('bio', item, 'action1')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.bio.visible && 
+                    currentPlayer.bio.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Скопировать' && 
+                    (currentPlayer.action2.character === 'bio' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="copy('bio', item, 'action2')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.bio.visible && 
+                    currentPlayer.bio.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Обмен' && 
+                    (currentPlayer.action1.character === 'bio' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="exchange('bio', item, 'action1')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.bio.visible && 
+                    currentPlayer.bio.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Обмен' && 
+                    (currentPlayer.action2.character === 'bio' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="exchange('bio', item, 'action2')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.bio.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Открыть' && 
+                    (currentPlayer.action1.character === 'bio' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="openCard('bio', item, 'action1')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.bio.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Открыть' && 
+                    (currentPlayer.action2.character === 'bio' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="openCard('bio', item, 'action2')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.bio.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить чужое' && 
+                    (currentPlayer.action1.character === 'bio' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('bio', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.bio.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить чужое' && 
+                    (currentPlayer.action2.character === 'bio' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('bio', item, 'action2')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.bio.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить свою' && 
+                    (currentPlayer.action1.character === 'bio' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('bio', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.bio.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить свою' && 
+                    (currentPlayer.action2.character === 'bio' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('bio', item, 'action2')"
+                >
+                 Заменить
+                </el-button>
               </li>
               <li><strong>Здорровье:</strong> <span v-if="item.player === lastSegment || item.health.visible">{{ item.health.name }}</span>
               <el-button
@@ -27,13 +256,238 @@
                   @click="changeVisible('health', item)"
               >
                   Открыть
-                </el-button></li>
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.health.visible && 
+                    currentPlayer.health.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Скопировать' && 
+                    (currentPlayer.action1.character === 'health' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="copy('health', item, 'action1')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.health.visible && 
+                    currentPlayer.health.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Скопировать' && 
+                    (currentPlayer.action2.character === 'health' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="copy('health', item, 'action2')"
+                >
+                 Скопировать
+                </el-button><el-button
+                  v-if="item.player !== lastSegment && 
+                    item.health.visible && 
+                    currentPlayer.health.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Обмен' && 
+                    (currentPlayer.action1.character === 'health' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="exchange('health', item, 'action1')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.health.visible && 
+                    currentPlayer.health.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Обмен' && 
+                    (currentPlayer.action2.character === 'health' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="exchange('health', item, 'action2')"
+                >
+                 Обменять
+                </el-button><el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.health.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Открыть' && 
+                    (currentPlayer.action1.character === 'health' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="openCard('health', item, 'action1')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.health.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Открыть' && 
+                    (currentPlayer.action2.character === 'health' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="openCard('health', item, 'action2')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.health.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить чужое' && 
+                    (currentPlayer.action1.character === 'health' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('health', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.health.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить чужое' && 
+                    (currentPlayer.action2.character === 'health' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('health', item, 'action2')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.health.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить свою' && 
+                    (currentPlayer.action1.character === 'health' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('health', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.health.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить свою' && 
+                    (currentPlayer.action2.character === 'health' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('health', item, 'action2')"
+                >
+                 Заменить
+                </el-button>
+              </li>
               <li><strong>Характер:</strong> <span v-if="item.player === lastSegment || item.character.visible">{{ item.character.name }}</span>
               <el-button
                 v-if="item.player === lastSegment && !item.character.visible"
                 @click="changeVisible('character', item)"
               >
                   Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.character.visible && 
+                    currentPlayer.character.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Скопировать' && 
+                    (currentPlayer.action1.character === 'character' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="copy('character', item, 'action1')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.character.visible && 
+                    currentPlayer.character.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Скопировать' && 
+                    (currentPlayer.action2.character === 'character' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="copy('character', item, 'action2')"
+                >
+                 Скопировать
+                </el-button><el-button
+                  v-if="item.player !== lastSegment && 
+                    item.character.visible && 
+                    currentPlayer.character.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Обмен' && 
+                    (currentPlayer.action1.character === 'character' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="exchange('character', item, 'action1')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.character.visible && 
+                    currentPlayer.character.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Обмен' && 
+                    (currentPlayer.action2.character === 'character' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="exchange('character', item, 'action2')"
+                >
+                 Обменять
+                </el-button><el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.character.visible &&
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Открыть' && 
+                    (currentPlayer.action1.character === 'character' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="openCard('character', item, 'action1')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.character.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Открыть' && 
+                    (currentPlayer.action2.character === 'character' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="openCard('character', item, 'action2')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.character.visible &&
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить чужое' && 
+                    (currentPlayer.action1.character === 'character' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('character', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.character.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить чужое' && 
+                    (currentPlayer.action2.character === 'character' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('character', item, 'action2')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.character.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить свою' && 
+                    (currentPlayer.action1.character === 'character' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('character', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.character.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить свою' && 
+                    (currentPlayer.action2.character === 'character' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('character', item, 'action2')"
+                >
+                 Заменить
                 </el-button></li>
               <li><strong>Хобби:</strong> <span v-if="item.player === lastSegment || item.hobby.visible">{{ item.hobby.name }}</span>
               <el-button
@@ -41,6 +495,120 @@
                 @click="changeVisible('hobby', item)"
               >
                   Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.hobby.visible && 
+                    currentPlayer.hobby.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Скопировать' && 
+                    (currentPlayer.action1.character === 'hobby' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="copy('hobby', item, 'action1')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.hobby.visible && 
+                    currentPlayer.hobby.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Скопировать' && 
+                    (currentPlayer.action2.character === 'hobby' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="copy('hobby', item, 'action2')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.hobby.visible && 
+                    currentPlayer.hobby.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Обмен' && 
+                    (currentPlayer.action1.character === 'hobby' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="exchange('hobby', item, 'action1')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.hobby.visible && 
+                    currentPlayer.hobby.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Обмен' && 
+                    (currentPlayer.action2.character === 'hobby' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="exchange('hobby', item, 'action2')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.hobby.visible &&
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Открыть' && 
+                    (currentPlayer.action1.character === 'hobby' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="openCard('hobby', item, 'action1')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.hobby.visible &&
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Открыть' && 
+                    (currentPlayer.action2.character === 'hobby' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="openCard('hobby', item, 'action2')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.hobby.visible &&
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить чужое' && 
+                    (currentPlayer.action1.character === 'hobby' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('hobby', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.hobby.visible &&
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить чужое' && 
+                    (currentPlayer.action2.character === 'hobby' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('hobby', item, 'action2')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.hobby.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить свою' && 
+                    (currentPlayer.action1.character === 'hobby' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('hobby', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.hobby.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить свою' && 
+                    (currentPlayer.action2.character === 'hobby' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('hobby', item, 'action2')"
+                >
+                 Заменить
                 </el-button></li>
               <li><strong>Фобия:</strong> <span v-if="item.player === lastSegment || item.phobia.visible">{{ item.phobia.name }}</span>
               <el-button
@@ -48,6 +616,120 @@
                 @click="changeVisible('phobia', item)"
               >
                   Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.phobia.visible && 
+                    currentPlayer.phobia.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Скопировать' && 
+                    (currentPlayer.action1.character === 'phobia' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="copy('phobia', item, 'action1')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.phobia.visible && 
+                    currentPlayer.phobia.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Скопировать' && 
+                    (currentPlayer.action2.character === 'phobia' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="copy('phobia', item, 'action2')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.phobia.visible && 
+                    currentPlayer.phobia.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Обмен' && 
+                    (currentPlayer.action1.character === 'phobia' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="exchange('phobia', item, 'action1')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.phobia.visible && 
+                    currentPlayer.phobia.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Обмен' && 
+                    (currentPlayer.action2.character === 'phobia' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="exchange('phobia', item, 'action2')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.phobia.visible &&
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Открыть' && 
+                    (currentPlayer.action1.character === 'phobia' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="openCard('phobia', item, 'action1')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.phobia.visible &&
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Открыть' && 
+                    (currentPlayer.action2.character === 'phobia' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="openCard('phobia', item, 'action2')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.phobia.visible &&
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить чужое' && 
+                    (currentPlayer.action1.character === 'phobia' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('phobia', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.phobia.visible &&
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить чужое' && 
+                    (currentPlayer.action2.character === 'phobia' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('phobia', item, 'action2')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.phobia.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить свою' && 
+                    (currentPlayer.action1.character === 'phobia' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('phobia', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.phobia.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить свою' && 
+                    (currentPlayer.action2.character === 'phobia' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('phobia', item, 'action2')"
+                >
+                 Заменить
                 </el-button></li>
               <li><strong>Факт:</strong> <span v-if="item.player === lastSegment || item.fact.visible">{{ item.fact.name }}</span>
               <el-button
@@ -55,6 +737,120 @@
                 @click="changeVisible('fact', item)"
               >
                   Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.fact.visible && 
+                    currentPlayer.fact.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Скопировать' && 
+                    (currentPlayer.action1.character === 'fact' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="copy('fact', item, 'action1')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.fact.visible && 
+                    currentPlayer.fact.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Скопировать' && 
+                    (currentPlayer.action2.character === 'fact' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="copy('fact', item, 'action2')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.fact.visible && 
+                    currentPlayer.fact.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Обмен' && 
+                    (currentPlayer.action1.character === 'fact' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="exchange('fact', item, 'action1')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.fact.visible && 
+                    currentPlayer.fact.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Обмен' && 
+                    (currentPlayer.action2.character === 'fact' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="exchange('fact', item, 'action2')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.fact.visible &&
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Открыть' && 
+                    (currentPlayer.action1.character === 'fact' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="openCard('fact', item, 'action1')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.fact.visible &&
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Открыть' && 
+                    (currentPlayer.action2.character === 'fact' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="openCard('fact', item, 'action2')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.fact.visible &&
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить чужое' && 
+                    (currentPlayer.action1.character === 'fact' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('fact', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.fact.visible &&
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить чужое' && 
+                    (currentPlayer.action2.character === 'fact' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('fact', item, 'action2')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.fact.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить свою' && 
+                    (currentPlayer.action1.character === 'fact' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('fact', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.fact.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить свою' && 
+                    (currentPlayer.action2.character === 'fact' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('fact', item, 'action2')"
+                >
+                 Заменить
                 </el-button></li>
               <li><strong>Багаж:</strong> <span v-if="item.player === lastSegment || item.baggage.visible">{{ item.baggage.name }}</span>
               <el-button
@@ -62,8 +858,142 @@
                 @click="changeVisible('baggage', item)"
               >
                   Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.baggage.visible && 
+                    currentPlayer.baggage.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Скопировать' && 
+                    (currentPlayer.action2.character === 'baggage' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="copy('baggage', item, 'action1')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.baggage.visible && 
+                    currentPlayer.baggage.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Скопировать' && 
+                    (currentPlayer.action1.character === 'baggage' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="copy('baggage', item, 'action2')"
+                >
+                 Скопировать
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.baggage.visible && 
+                    currentPlayer.baggage.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Обмен' && 
+                    (currentPlayer.action1.character === 'baggage' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="exchange('baggage', item, 'action1')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.baggage.visible && 
+                    currentPlayer.baggage.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Обмен' && 
+                    (currentPlayer.action2.character === 'baggage' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="exchange('baggage', item, 'action2')"
+                >
+                 Обменять
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.baggage.visible &&
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Открыть' && 
+                    (currentPlayer.action1.character === 'baggage' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="openCard('baggage', item, 'action1')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    !item.baggage.visible &&
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Открыть' && 
+                    (currentPlayer.action2.character === 'baggage' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="openCard('baggage', item, 'action2')"
+                >
+                 Открыть
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.baggage.visible &&
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить чужое' && 
+                    (currentPlayer.action1.character === 'baggage' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('baggage', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player !== lastSegment && 
+                    item.baggage.visible &&
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить чужое' && 
+                    (currentPlayer.action2.character === 'baggage' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('baggage', item, 'action2')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.baggage.visible && 
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Заменить свою' && 
+                    (currentPlayer.action1.character === 'baggage' 
+                    || currentPlayer.action1.character === 'certain')"
+                  @click="changeMy('baggage', item, 'action1')"
+                >
+                 Заменить
+                </el-button>
+                <el-button
+                  v-if="item.player === lastSegment && 
+                    currentPlayer.baggage.visible && 
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Заменить свою' && 
+                    (currentPlayer.action2.character === 'baggage' 
+                    || currentPlayer.action2.character === 'certain')"
+                  @click="changeMy('baggage', item, 'action2')"
+                >
+                 Заменить
                 </el-button></li>
             </ul>
+            <div style="display: flex; justify-content: space-around">
+              <p v-if="item.player === lastSegment || item.action1.visible"><strong>Способность 1</strong><br>{{ item.action1.text }}
+                <el-button
+                  v-if="item.player === lastSegment &&
+                    !currentPlayer.action1.visible && 
+                    currentPlayer.action1.action === 'Обменяться'"
+                  @click="allExchange('baggage', item, 'action1')"
+                >
+                 Использовать
+                </el-button></p>
+              <p v-if="item.player === lastSegment || item.action2.visible"><strong>Способность 2</strong><br>{{ item.action2.text }}
+                <el-button
+                  v-if="item.player === lastSegment &&
+                    !currentPlayer.action2.visible && 
+                    currentPlayer.action2.action === 'Обменяться'"
+                  @click="allExchange('baggage', item, 'action2')"
+                >
+                 Использовать
+                </el-button></p>
+            </div>
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -71,6 +1001,13 @@
   </div>
 </template>
 <script setup>
+import characterData from '@/assets/data/character.json'
+import factData from '@/assets/data/fact.json'
+import fobiaData from '@/assets/data/fobii.json'
+import healthData from '@/assets/data/health.json'
+import hobbyData from '@/assets/data/hobby.json'
+import professionData from '@/assets/data/profesion.json'
+import storageData from '@/assets/data/storage.json'
 // Import necessary store modules
 import {useSectionsStore} from '~/store/section';
 import {useModulesStore} from '~/store/modules';
@@ -92,6 +1029,10 @@ const lastSegment = computed(() => {
 const sectionStore = useSectionsStore();
 const modulesStore = useModulesStore();
 
+const randomFromArray = (arr) => {
+  const index = Math.floor(Math.random() * arr.length);
+  return arr.splice(index, 1)[0];
+};
 
 // Initialize variables
 const renderComponent = ref(false);
@@ -121,17 +1062,19 @@ onMounted(() => {
 });
 
 
+
+const sections = computed(() => {
+  return Array.isArray(sectionStore?.sectionList?.data) ?
+   sectionStore.sectionList.data : [];
+});
+
 // Compute dialog header based on whether it's an update or create operation
-const dialogHeader = computed(() => {
-  return sectionStore.currentSection?._id ?
-   {title: `Updating ${route.params.module}`,
-     buttonText: 'Save changes', type: 'primary'} :
-      {title: `Creating ${route.params.module} `,
-        buttonText: `Create ${route.params.module}`, type: 'success'};
+const currentPlayer = computed(() => {
+  const item = sections.value.find((item) => item.player === Number(route.params.id));
+  return item
 });
 
 async function changeRoute(e) {
-  
   router.push({path: route.path, query: {...route.query, player: e+1}})
 }
 
@@ -149,8 +1092,44 @@ function updateCurrentValue(key, value) {
   sectionStore.setSection({...sectionStore.currentSection, [key]: value});
 }
 
+const generateCharacters = () => {
+  let availableCharacters = [...characterData];
+  let availableFacts = [...factData];
+  let availableFobias = [...fobiaData];
+  let availableHealths = [...healthData];
+  let availableHobbies = [...hobbyData];
+  let availableProfessions = [...professionData];
+  let availableStorages = [...storageData];  
+
+  const age = Math.floor(Math.random() * 75) + 16;
+  const health = randomFromArray(availableHealths).name;
+  const severity = health !== "Отличное" ? Math.floor(Math.random() * 90) + 10 : null;
+  return {
+    profession: { name: randomFromArray(availableProfessions).name, visible: true },
+    bio: {
+      name: `Возраст: ${age}, пол: ${randomFromArray(['Мужчина', 'Женщина'])}, плодовитость: ${
+        age >= 16 && age <= 50
+          ? Math.random() >= 0.1
+            ? "Плодовитый"
+            : "Не плодовитый"
+          : Math.random() <= 0.15
+          ? "Плодовитый"
+          : "Не плодовитый"
+      }`,
+      visible: true,
+    },
+    health: { name: `${health} ${severity ? ` Тяжесть ${severity}%` : ""}`, visible: true },
+    character: { name: randomFromArray(availableCharacters).name, visible: true },
+    hobby: { name: randomFromArray(availableHobbies).name, visible: true },
+    phobia: { name: randomFromArray(availableFobias).name, visible: true },
+    fact: { name: randomFromArray(availableFacts).name, visible: true },
+    baggage: { name: randomFromArray(availableStorages).name, visible: true },
+  }
+
+};
+
 async function changeVisible(key, item) {
-    sectionStore.setSection({...item, [key]: {...item[key], visible: true}});
+    sectionStore.setSection({...item, [key]: {...item[key], visible: true} });
     if (sectionStore.currentSection._id) {
       await sectionStore.editSection(route.params.module,
           sectionStore.currentSection._id,
@@ -158,26 +1137,6 @@ async function changeVisible(key, item) {
     }
     refreshData()
   }
-
-// Handle form submission (create or update)
-async function submit() {
-  try {
-    if (sectionStore.currentSection._id) {
-      await sectionStore.editSection(route.params.module,
-          sectionStore.currentSection._id,
-          {...sectionStore.currentSection, _id: undefined});
-    } else {
-      await sectionStore.createSection(route.params.module,
-          {...sectionStore.currentSection, _id: undefined});
-    }
-    await nextTick(async () => {
-      sectionStore.getSections(route.params.module);
-    });
-    closeModal();
-  } catch (e) {
-    console.log(e);
-  }
-}
 
 // Force re-render the component
 function forceRerender() {
@@ -187,14 +1146,85 @@ function forceRerender() {
     renderComponent.value = true;
   });
 }
-
-// Delete a section by ID
-async function deleteSection(id) {
-  await sectionStore.deleteSection(route.params.module, id);
-  await nextTick(async ()=>{
-    await sectionStore.getSections(route.params.module);
+const allExchange  = async (key, player, action) => {
+  const item1 = sections.value.find((item) => item.player === player.player);
+  sectionStore.setSection({...item1, [action]: {...item1[action], visible: true}})
+  await sectionStore.editSection(route.params.module,
+    sectionStore.currentSection._id,
+    {...sectionStore.currentSection, _id: undefined});
+  await refreshData()
+  const character = player[action].character
+  let changed = sections.value.filter((item) => item[character].visible === true)
+  let filteredNames = changed.map(item => item[character].name);
+  await changed.forEach(async item => {
+    sectionStore.setSection({...item, [character]: {name: randomFromArray(filteredNames), visible: true}})
+    await sectionStore.editSection(route.params.module,
+      sectionStore.currentSection._id,
+      {...sectionStore.currentSection, _id: undefined});
   });
+  await refreshData()
 }
+
+const changeMy = async (key, player, action) => {
+  await refreshData()
+    const item = generateCharacters()
+    const item1 = sections.value.find((item) => item.player === player.player);
+    const item2 = sections.value.find((item) => item.player === Number(route.params.id));
+    if (item1.player === Number(route.params.id)) {
+      sectionStore.setSection({...item1, [key]: item[key], [action]: {...item1[action], visible: true}});
+      await sectionStore.editSection(route.params.module,
+      sectionStore.currentSection._id,
+      {...sectionStore.currentSection, _id: undefined});
+    } else {
+      sectionStore.setSection({...item1, [key]: item[key]});
+      await sectionStore.editSection(route.params.module,
+      sectionStore.currentSection._id,
+      {...sectionStore.currentSection, _id: undefined});
+      sectionStore.setSection({...item2, [action]: {...item2[action], visible: true}});
+      await sectionStore.editSection(route.params.module,
+      sectionStore.currentSection._id,
+      {...sectionStore.currentSection, _id: undefined});
+    }
+  await refreshData()
+  }
+
+
+const openCard = async (key, player, action) => {
+  await refreshData()
+    const item1 = sections.value.find((item) => item.player === player.player);
+    const item2 = sections.value.find((item) => item.player === Number(route.params.id));
+    sectionStore.setSection({...item2, [action]: {...item2[action], visible: true}});
+    await sectionStore.editSection(route.params.module,
+      sectionStore.currentSection._id,
+      {...sectionStore.currentSection, _id: undefined});
+    changeVisible(key, player)
+  }
+
+const copy = async (key, player, action) => {
+  await refreshData()
+    const item1 = sections.value.find((item) => item.player === player.player);
+    const item2 = sections.value.find((item) => item.player === Number(route.params.id));
+    sectionStore.setSection({...item2, [key]: item1[key], [action]: {...item2[action], visible: true}});
+  await sectionStore.editSection(route.params.module,
+    sectionStore.currentSection._id,
+    {...sectionStore.currentSection, _id: undefined});
+  await refreshData()
+  }
+
+  const exchange = async (key, player, action) => {
+    await refreshData()
+    const item1 = sections.value.find((item) => item.player === player.player);
+    const item2 = sections.value.find((item) => item.player === Number(route.params.id));
+    sectionStore.setSection({...item2, [key]: item1[key], [action]: {...item2[action], visible: true}});
+    await sectionStore.editSection(route.params.module,
+      sectionStore.currentSection._id,
+      {...sectionStore.currentSection, _id: undefined});
+    sectionStore.setSection({...item1, [key]: item2[key]});
+    await sectionStore.editSection(route.params.module,
+      sectionStore.currentSection._id,
+      {...sectionStore.currentSection, _id: undefined});
+    await refreshData()
+  }
 
 const open = () => {
   ElMessageBox.alert(`Бедствие - ${modulesStore.currentModule.catastrophe} Оснащение - ${modulesStore.currentModule.bunker}`, 'Информация о бункере', {
@@ -225,11 +1255,13 @@ const open = () => {
 .el-carousel__item:nth-child(2n) {
   background-color: #99a9bf;
   border-radius: 8px;
+  min-width: 230px;
 }
 
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
   border-radius: 8px;
+  min-width: 230px;
 }
 .card {
   border-radius: 8px;

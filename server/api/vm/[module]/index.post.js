@@ -22,6 +22,8 @@ export default defineEventHandler(
             fact: {type: Object, required: false},
             baggage: {type: Object, required: false},
             name: {type: String, required: false},
+            action1: {type: Object, required: false},
+            action2: {type: Object, required: false},
           }));
         // Read the request body
         const body = await readBody(ctx);

@@ -21,6 +21,8 @@ export default defineEventHandler(
             fact: {type: Object, required: true},
             baggage: {type: Object, required: true},
             name: {type: String, required: false},
+            action1: {type: Object, required: false},
+            action2: {type: Object, required: false},
           }));
         // Find and remove a document by its ID
         return await SectionModel.findByIdAndRemove(ctx.context.params.id);
