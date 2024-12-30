@@ -12,10 +12,7 @@ export default async () => {
       dbName: config.dbName,
       user: config.user,
       pass: config.pass,
-      authSource: config.authSource,
-    };
-
-    // Attempt to connect to the MongoDB database
+    };    // Attempt to connect to the MongoDB database
     // using the provided URL and options
     await mongoose.connect(config.dburl, DB_OPTIONS);
 

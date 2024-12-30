@@ -5,7 +5,10 @@ import {defineStore} from 'pinia';
 export interface Module {
   id?: string
   sectionName: string
-  fields: { type: 'String' | 'Number' | 'Boolean', label: string }[]
+  players: number
+  catastrophe: string
+  threat: string
+  bunker: string
 }
 
 // Create a Pinia store named 'modules'
@@ -14,9 +17,9 @@ export const useModulesStore = defineStore('modules', {
   state: () => ({
     modules: {data: [] as Module[]}, // Initialize modules as an empty array
     module: {
-      sectionsName: '',
-      fields: [],
-    } as unknown as Module, // Initialize module with default values
+      sectionName: '',
+      players: 0,
+    }
   }),
 
   // Define getters to retrieve data from the state
@@ -46,11 +49,10 @@ export const useModulesStore = defineStore('modules', {
     // Action to reset the current module to default values
     resetCurrentModule() {
       this.module = {
-        sectionsName: '',
-        fields: [],
+        sectionName: '',
+        players: 0,
       } as unknown as Module;
     },
-
     // Action to fetch a list of modules from the API
     async getModules() {
       try {

@@ -28,6 +28,31 @@ export const useSectionsStore = defineStore('sections', {
     setSections(payload: { data: [] }) {
       this.sectionListState = payload;
     },
+    
+    updateSections(newData: any[]) {
+      newData.forEach((newItem) => {
+        const existingIndex = this.sectionListState.data.findIndex(
+          (item: any) => item.id === newItem.id
+        );
+    
+        if (existingIndex !== -1) {
+          // Проверяем, есть ли отличия между старым и новым элементом
+          const existingItem = this.sectionListState.data[existingIndex];
+          if (JSON.stringify(existingItem) !== JSON.stringify(newItem)) {
+            // Обновляем элемент только если он изменился
+            this.sectionListState.data[existingIndex] = { ...existingItem, ...newItem };
+          }
+        } else {
+          // Если элемент отсутствует в текущем массиве, добавляем его
+          this.sectionListState.data.push(newItem);
+        }
+      });
+    
+      // Удаляем элементы, которых нет в новом массиве
+      this.sectionListState.data = this.sectionListState.data.filter((item:any) =>
+        newData.some((newItem) => newItem.id === item.id)
+      );
+    },
 
     // Action to set the current section in the state
     setSection(payload: any) {
@@ -46,6 +71,16 @@ export const useSectionsStore = defineStore('sections', {
           method: 'get',
         });
         this.setSections(data?.value || {data: [] as any});
+        return data;
+      } catch (e) {}
+    },
+
+    async refreshSections(sectionName: string) {
+      try {
+        const {data} = await useFetch(`/api/vm/${sectionName}`, {
+          method: 'get',
+        });
+        this.updateSections(data?.value || {data: [] as any});
         return data;
       } catch (e) {}
     },

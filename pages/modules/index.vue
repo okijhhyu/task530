@@ -3,13 +3,13 @@
     <el-card>
       <template #header>
         <div class="flex-items">
-          <h1>Modules</h1>
+          <h1>Игры</h1>
           <el-button
             type="success"
             plain
             @click="openAddDialog()"
           >
-            Add module
+            Создать игру
           </el-button>
         </div>
       </template>
@@ -26,8 +26,14 @@
         <el-table-column
           min-width="300px"
           sortable
-          label="Section name"
+          label="Название игры"
           prop="sectionName"
+        />
+        <el-table-column
+          min-width="300px"
+          sortable
+          label="Количество игроков"
+          prop="players"
         />
         <el-table-column
           width="150px"
@@ -46,7 +52,7 @@
                   @click="openViewDialog(slot.row._id)"
                 />
               </el-tooltip>
-              <el-tooltip content="Go to module">
+              <el-tooltip content="Перейти в игру">
                 <el-button
                   type="primary"
                   :icon="ElIconLocation"
@@ -55,7 +61,7 @@
                   @click="$router.push(`/modules/${slot.row.sectionName}`)"
                 />
               </el-tooltip>
-              <el-tooltip content="Delete">
+              <el-tooltip content="Удалить">
                 <el-button
                   type="danger"
                   :icon="ElIconDelete"
@@ -84,7 +90,7 @@
           </div>
         </template>
         <el-form>
-          <el-form-item label="Section name">
+          <el-form-item label="Название игры">
             <el-input
               :readonly="!!modulesStore.currentModule?._id"
               style="width: 240px;"
@@ -92,55 +98,18 @@
               @input="updateCurrentValue('sectionName', $event)"
             />
           </el-form-item>
-          <div class="flex-items">
-            <h3>Fields</h3>
-            <el-input
-              v-if="!modulesStore.currentModule?._id"
-              v-model="fieldLabel"
-              style="width: 240px; height:30px"
-            >
-              <template #append>
-                <el-button
-                  :icon="ElIconPlus"
-                  type="success"
-                  plain
-                  @click="addField"
-                />
-              </template>
-            </el-input>
-          </div>
+
           <div class="form-items">
             <el-form-item
-              v-for="(field, index) in modulesStore.currentModule.fields"
-              :key="field.label + index" :label="field.label"
+              label="Количество игроков"
             >
-              <template #label>
-                {{field.label}}
-                <template v-if="!modulesStore.currentModule?._id">
-                  <el-tooltip content="Delete field">
-                    <el-button
-                      type="danger"
-                      :icon="ElIconDelete"
-                      size="small"
-                      text
-                      @click="deleteField(index)"
-                    />
-                  </el-tooltip>
-                </template>
-              </template>
-              <el-select
-                :model-value="field.type"
+              <el-input-number
+                :min="1"
+                :model-value="modulesStore.currentModule.players"
                 style="width: 100%;"
                 :disabled='!!modulesStore.currentModule?._id'
-                @change="updateFieldType(field.label, $event)"
-              >
-                <el-option
-                  v-for="item in options"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
-              </el-select>
+                @input="updateCurrentValue('players', $event)"
+              />
             </el-form-item>
           </div>
         </el-form>
@@ -149,16 +118,152 @@
   </div>
 </template>
 <script setup>
-// Import necessary store modules
+import characterData from '@/assets/data/character.json'
+import factData from '@/assets/data/fact.json'
+import fobiaData from '@/assets/data/fobii.json'
+import healthData from '@/assets/data/health.json'
+import hobbyData from '@/assets/data/hobby.json'
+import professionData from '@/assets/data/profesion.json'
+import storageData from '@/assets/data/storage.json'
+
+import {useSectionsStore} from '~/store/section';
 import {useModulesStore} from '~/store/modules';
-// Initialize modulesStore and reset current module
+
+// Initialize stores and route
+const sectionStore = useSectionsStore();
 const modulesStore = useModulesStore();
 modulesStore.resetCurrentModule();
 
 const dialogVisible = ref(false);
 const fieldLabel = ref('');
-const options = ['String', 'Number', 'Boolean'];
+const characters = ref([]);
 
+const randomFromArray = (arr) => {
+  const index = Math.floor(Math.random() * arr.length);
+  return arr.splice(index, 1)[0];
+};
+
+const generateCharacters = async (sectionName, numCharacters) => {
+  let availableCharacters = [...characterData];
+  let availableFacts = [...factData];
+  let availableFobias = [...fobiaData];
+  let availableHealths = [...healthData];
+  let availableHobbies = [...hobbyData];
+  let availableProfessions = [...professionData];
+  let availableStorages = [...storageData];
+  let actions =
+   [
+  { "text": "Обменяться здоровье c выбранным человеком", "action": "Обмен", "character": "health" },
+  { "text": "Обменяться характером c выбранным человеком", "action": "Обмен", "character": "character" },
+  { "text": "Обменяться хобби c выбранным человеком", "action": "Обмен", "character": "hobby" },
+  { "text": "Обменяться фобией c выбранным человеком ", "action": "Обмен", "character": "phobia" },
+  { "text": "Обменять факт c выбранным человеком", "action": "Обмен", "character": "fact" },
+  { "text": "Обменять багажом с выбранным человеком", "action": "Обмен", "character": "baggage" },
+  { "text": "Обменять проффесию с выбранным человеком", "action": "Обмен", "character": "profession" },
+  { "text": "Обменять био характеристику с выбранным человеком", "action": "Обмен", "character": "bio" },
+  { "text": "Обменять случайную открытую характеристику с выбранным человеком", "action": "Обмен", "character": "random" },
+  { "text": "Обменять характеристику на выбор с выбранным человеком", "action": "Обмен", "character": "certain" },
+  
+  { "text": "Заменить свое здоровье на случайное", "action": "Заменить свою", "character": "health" },
+  { "text": "Заменить свой характер на случайный", "action": "Заменить свою", "character": "character" },
+  { "text": "Заменить свое хобби на случайное", "action": "Заменить свою", "character": "hobby" },
+  { "text": "Заменить свою фобию на случайную", "action": "Заменить свою", "character": "phobia" },
+  { "text": "Заменить свой факт на случайный", "action": "Заменить свою", "character": "fact" },
+  { "text": "Заменить свой багаж на случайный", "action": "Заменить свою", "character": "baggage" },
+  { "text": "Заменить свою проффессию на случайную", "action": "Заменить свою", "character": "profession" },
+  { "text": "Заменить свою био характеристику на случайную", "action": "Заменить свою", "character": "bio" },
+  { "text": "Заменить свою случайную характеристику на случайную", "action": "Заменить свою", "character": "random" },
+  { "text": "Заменить свою выбранную характеристику на случайную", "action": "Заменить свою", "character": "certain" },
+  
+  { "text": "Заменить чужое здоровье на случайное", "action": "Заменить чужое", "character": "health" },
+  { "text": "Заменить чужой характер на случайный", "action": "Заменить чужое", "character": "character" },
+  { "text": "Заменить чужое хобби на случайное", "action": "Заменить чужое", "character": "hobby" },
+  { "text": "Заменить чужую фобию на случайную", "action": "Заменить чужое", "character": "phobia" },
+  { "text": "Заменить чужой факт на случайный", "action": "Заменить чужое", "character": "fact" },
+  { "text": "Заменить чужой багаж на случайный", "action": "Заменить чужое", "character": "baggage" },
+  { "text": "Заменить чужую проффессию на случайную", "action": "Заменить чужое", "character": "profession" },
+  { "text": "Заменить чужую био характеристику на случайную", "action": "Заменить чужое", "character": "bio" },
+  { "text": "Заменить чужую случайную характеристику на случайную", "action": "Заменить чужое", "character": "random" },
+  { "text": "Заменить чужую выбранную характеристику на случайную", "action": "Заменить чужое", "character": "certain" },
+  
+  { "text": "Все игроки обмениваются открытым здоровьем", "action": "Обменяться", "character": "health" },
+  { "text": "Все игроки обмениваются открытыми характерами", "action": "Обменяться", "character": "character" },
+  { "text": "Все игроки обмениваются открытыми хобби", "action": "Обменяться", "character": "hobby" },
+  { "text": "Все игроки обмениваются открытыми фобиями", "action": "Обменяться", "character": "phobia" },
+  { "text": "Все игроки обмениваются открытыми фактами", "action": "Обменяться", "character": "fact" },
+  { "text": "Все игроки обмениваются открытымми багажами", "action": "Обменяться", "character": "baggage" },
+  { "text": "Все игроки обмениваются открытыми проффессиями", "action": "Обменяться", "character": "profession" },
+  { "text": "Все игроки обмениваются открытыми био характеристиками", "action": "Обменяться", "character": "bio" },
+  
+  { "text": "Скопировать чужое здоровье", "action": "Скопировать", "character": "health" },
+  { "text": "Скопировать чужой характер", "action": "Скопировать", "character": "character" },
+  { "text": "Скопировать чужое хобби", "action": "Скопировать", "character": "hobby" },
+  { "text": "Скопировать чужую фобию", "action": "Скопировать", "character": "phobia" },
+  { "text": "Скопировать чужой факт", "action": "Скопировать", "character": "fact" },
+  { "text": "Скопировать чужой багаж", "action": "Скопировать", "character": "baggage" },
+  { "text": "Скопировать чужую проффессию", "action": "Скопировать", "character": "profession" },
+  { "text": "Скопировать чужую био характеристику", "action": "Скопировать", "character": "bio" },
+  { "text": "Скопировать чужую случайную характеристику на случайную", "action": "Скопировать", "character": "random" },
+  { "text": "Скопировать чужую выбранную характеристику на случайную", "action": "Скопировать", "character": "certain" },
+
+  { "text": "Откройте здоровье выбранного игрока", "action": "Открыть", "character": "health" },
+  { "text": "Откройте характер выбранного игрока", "action": "Открыть", "character": "character" },
+  { "text": "Откройте хобби выбранного игрока", "action": "Открыть", "character": "hobby" },
+  { "text": "Откройте фобию выбранного игрока", "action": "Открыть", "character": "phobia" },
+  { "text": "Откройте факт выбранного игрока", "action": "Открыть", "character": "fact" },
+  { "text": "Откройте багаж выбранного игрока", "action": "Открыть", "character": "baggage" },
+  { "text": "Откройте проффессию выбранного игрока", "action": "Скопировать", "character": "profession" },
+  { "text": "Откройте био характеристику выбранного игрока", "action": "Скопировать", "character": "bio" },
+  { "text": "Откройте случайную характеристику выбранного игрока", "action": "Скопировать", "character": "random" },
+  { "text": "Откройте выбранную характеристику выбранного игрока", "action": "Скопировать", "character": "certain" },
+]
+  let genders = ["Мужчина", "Женщина"];
+  const half = Math.ceil(numCharacters / 2);
+  const allGenders = Array.from({ length: half }, () => [...genders]).flat();
+
+  const results = [];
+  
+  for (let index = 0; index < numCharacters; index++) {
+    const age = Math.floor(Math.random() * 75) + 16;
+    const health = randomFromArray(availableHealths).name;
+    const severity = health !== "Отличное" ? Math.floor(Math.random() * 90) + 10 : null;
+    const randomAction1 = randomFromArray[actions];
+    const randomAction2 = randomFromArray[actions];
+
+    const character = {
+      player: index + 1,
+      xod: (index + 1) === 1,
+      profession: { name: randomFromArray(availableProfessions).name, visible: false },
+      bio: {
+        name: `Возраст: ${age}, пол: ${randomFromArray(allGenders)}, плодовитость: ${
+          age >= 16 && age <= 50
+            ? Math.random() >= 0.1
+              ? "Плодовитый"
+              : "Не плодовитый"
+            : Math.random() <= 0.15
+            ? "Плодовитый"
+            : "Не плодовитый"
+        }`,
+        visible: false,
+      },
+      health: { name: `${health} ${severity ? ` Тяжесть ${severity}%` : ""}`, visible: false },
+      character: { name: randomFromArray(availableCharacters).name, visible: false },
+      hobby: { name: randomFromArray(availableHobbies).name, visible: false },
+      phobia: { name: randomFromArray(availableFobias).name, visible: false },
+      fact: { name: randomFromArray(availableFacts).name, visible: false },
+      baggage: { name: randomFromArray(availableStorages).name, visible: false },
+      action1: { ...randomAction1, visible: false },
+      action2: { ...randomAction2, visible: false }
+    };
+
+    // Создаем секцию
+    await sectionStore.createSection(sectionName, {
+      ...sectionStore.currentSection,
+      _id: undefined,
+      ...character,
+    });
+  }
+};
 // Fetch modules data when the component is mounted
 await nextTick(() =>{
   try {
@@ -177,9 +282,9 @@ const modules = computed(() => {
 // Compute dialog header based on whether it's an view or create operation
 const dialogHeader = computed(() => {
   return modulesStore.currentModule?._id ?
-      {title: `${modulesStore.currentModule?.sectionName} module`,
+      {title: `${modulesStore.currentModule?.sectionName} игра`,
         buttonText: '', type: 'primary'} :
-       {title: 'Creating module', buttonText: 'Create module', type: 'success'};
+       {title: 'Создание игры', buttonText: 'Создать игру', type: 'success'};
 });
 
 // Open the add module dialog
@@ -208,39 +313,16 @@ function updateCurrentValue(key, value) {
   modulesStore.setModule({...modulesStore.currentModule, [key]: value});
 }
 
-// Add a new field to the module
-function addField() {
-  if (fieldLabel.value &&
-      modulesStore.currentModule.fields
-          .findIndex(({label}) => label === fieldLabel.value) < 0) {
-    updateCurrentValue('fields', [...modulesStore.currentModule.fields,
-      {type: 'String', label: fieldLabel.value}]);
-    fieldLabel.value = '';
-  }
-}
-// Delete a new field from the module
-function deleteField(index) {
-  updateCurrentValue('fields', modulesStore.currentModule.fields
-      .filter((_item, itemIndex) => index !== itemIndex ));
-}
-// Update the type of a field in the module
-function updateFieldType(label, type) {
-  updateCurrentValue('fields',
-      modulesStore.currentModule.fields.map((field) => {
-        if (field.label === label) {
-          return {label, type};
-        } else {
-          return field;
-        }
-      }));
-}
 
 // Handle module submission create
 async function submit() {
   try {
     if (modulesStore.currentModule.sectionName) {
-      await modulesStore.createModule({...modulesStore.currentModule,
+      let data = await modulesStore.createModule({...modulesStore.currentModule,
         id: undefined});
+
+      await generateCharacters(data.data.value.sectionName, data.data.value.players)
+      
       await nextTick(async ()=>{
         await modulesStore.getModules();
       });

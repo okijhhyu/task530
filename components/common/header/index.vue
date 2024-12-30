@@ -5,12 +5,6 @@
     </router-link>
     <breadrumbs />
     <div class="header-settings">
-      <a
-        class="link-normal"
-        :href="user ? '/api/auth/logout' : '/api/auth/login'"
-      >
-        {{ user ? 'Sign out' : 'Sign in' }}
-      </a>
     </div>
   </div>
 </template>

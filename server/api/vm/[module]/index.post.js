@@ -5,27 +5,24 @@ import ModulesModel from '~~/server/models/modules';
 export default defineEventHandler(
     async (ctx) => {
       try {
-      // Find the module query based on the sectionName
-        const sectionValue = await ModulesModel
-            .findOne({sectionName: ctx.context.params.module});
 
-        // Create an object to define schema fields
-        const schemaFields = {};
-
-        // Iterate through the fields of the query and
-        // build the schemaFields object
-        sectionValue.fields.forEach((field) => {
-          schemaFields[field.label] = {
-            type: field.type,
-          };
-        });
-
-        // Define the SectionModel based on the module's sectionName
         const SectionModel =
         mongoose.models[ctx.context.params.module] ||
         mongoose.model(ctx.context.params.module,
-            new mongoose.Schema(schemaFields));
-
+          new mongoose.Schema({
+            // Field for the section name, which should be a string and is required
+            player: {type: Number, required: true},
+            xod: {type: Boolean, required: true},
+            profession: {type: Object, required: false},
+            bio: {type: Object, required: false},
+            health: {type: Object, required: false},
+            character: {type: Object, required: false},
+            hobby: {type: Object, required: false},
+            phobia: {type: Object, required: false},
+            fact: {type: Object, required: false},
+            baggage: {type: Object, required: false},
+            name: {type: String, required: false},
+          }));
         // Read the request body
         const body = await readBody(ctx);
 
