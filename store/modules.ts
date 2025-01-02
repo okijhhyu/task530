@@ -8,7 +8,6 @@ export interface Module {
   players: number
   catastrophe: string
   threat: string
-  bunker: string
 }
 
 // Create a Pinia store named 'modules'

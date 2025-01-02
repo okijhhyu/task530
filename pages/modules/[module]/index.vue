@@ -61,7 +61,7 @@ const sections = computed(() => {
 });
 
 function open() {
-  ElMessageBox.alert(`Бедствие - ${modulesStore.currentModule.catastrophe} Оснащение - ${modulesStore.currentModule.bunker}`, 'Информация о бункере', {
+  ElMessageBox.alert(`${modulesStore.currentModule.catastrophe}`, 'Информация о бункере', {
     confirmButtonText: 'OK',
   });
 }

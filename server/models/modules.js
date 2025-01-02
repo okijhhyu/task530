@@ -8,9 +8,8 @@ const modulesSchema = new mongoose.Schema({
 
   // Field for storing an array of fields, data structure not explicitly defined
   players: {type: Number, required: true},
-  catastrophe: {type: String, required: true},
+  catastrophe: {type: String, required: false},
   threat: {type: String, required: true},
-  bunker: {type: String, required: true}
 });
 
 // Create a Mongoose model named "modules" based on the defined schema

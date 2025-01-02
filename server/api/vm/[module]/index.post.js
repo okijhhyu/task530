@@ -13,6 +13,7 @@ export default defineEventHandler(
             // Field for the section name, which should be a string and is required
             player: {type: Number, required: true},
             xod: {type: Boolean, required: true},
+            kicked: {type: Boolean, required: false},
             profession: {type: Object, required: false},
             bio: {type: Object, required: false},
             health: {type: Object, required: false},

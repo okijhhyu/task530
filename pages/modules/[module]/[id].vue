@@ -1,13 +1,16 @@
 <template>
   <div>
-    <h1 class='title'><el-button plain @click="open">Бункер</el-button><el-button plain @click="refreshData">Обновить данные</el-button></h1>
+    <h1 class='title'><el-button plain @click="open">Бункер</el-button><el-button plain @click="refreshData">Обновить данные</el-button><el-button :disabled="!available" @click="open2">Угроза</el-button></h1>
     <client-only>
       <el-carousel ref="carusel" height="80vh" :autoplay="false" @change="changeRoute">
         <el-carousel-item v-for="item in sections" :key="item">
           <div class="card">
-            <el-button style="position: absolute;right: 30px;top: 5px;">
+            <el-button style="position: absolute;right: 30px;top: 5px;" v-if="!item.kicked" @click="kick(item)">
               x
             </el-button>
+            <div v-else style="position: absolute;right: 30px;top: 5px; color:red">
+              Исключен
+            </div>
             <h3>Игрок: {{ item.player }} <strong><span v-if="item.player === lastSegment || item.profession.visible ">{{ item.profession.name }}</span>
                 <el-button
                   v-if="item.player === lastSegment && !item.profession.visible"
@@ -1015,10 +1018,15 @@ import storageData from '@/assets/data/storage.json'
 import {useSectionsStore} from '~/store/section';
 import {useModulesStore} from '~/store/modules';
 import { useRouter, useRoute } from 'vue-router';
+import { useWebSocket } from '~/composables/useWebSocket';
 
 import { ref } from 'vue';
 
 const carusel = ref(null);
+
+
+const input = ref('');
+
 
 const router = useRouter()
 const route = useRoute();
@@ -1028,9 +1036,19 @@ const lastSegment = computed(() => {
   return Number(segments[segments.length - 1]);
 });
 
+const available = computed(() => {
+  const data = sectionStore.sectionList.data.filter(item => item.kicked <= 4);
+  return data.length<=4;
+});
+
 // Initialize stores and route
 const sectionStore = useSectionsStore();
 const modulesStore = useModulesStore();
+const { sendMessage, data } = useWebSocket('ws://localhost:8080', carusel);
+
+const send = () => {
+  sendMessage("Обновить данные");
+};
 
 const randomFromArray = (arr) => {
   const index = Math.floor(Math.random() * arr.length);
@@ -1079,6 +1097,16 @@ const currentPlayer = computed(() => {
 
 async function changeRoute(e) {
   router.push({path: route.path, query: {...route.query, player: e+1}})
+}
+
+async function kick(item) {
+ sectionStore.setSection({...item, kicked: true });
+    if (sectionStore.currentSection._id) {
+      await sectionStore.editSection(route.params.module,
+          sectionStore.currentSection._id,
+          {...sectionStore.currentSection, _id: undefined});
+    }
+    send()
 }
 
 async function refreshData() {
@@ -1138,7 +1166,7 @@ async function changeVisible(key, item) {
           sectionStore.currentSection._id,
           {...sectionStore.currentSection, _id: undefined});
     }
-    refreshData()
+    send()
   }
 
 // Force re-render the component
@@ -1165,11 +1193,10 @@ const allExchange  = async (key, player, action) => {
       sectionStore.currentSection._id,
       {...sectionStore.currentSection, _id: undefined});
   });
-  await refreshData()
+  send()
 }
 
 const changeMy = async (key, player, action) => {
-  await refreshData()
     const item = generateCharacters()
     const item1 = sections.value.find((item) => item.player === player.player);
     const item2 = sections.value.find((item) => item.player === Number(route.params.id));
@@ -1188,34 +1215,31 @@ const changeMy = async (key, player, action) => {
       sectionStore.currentSection._id,
       {...sectionStore.currentSection, _id: undefined});
     }
-  await refreshData()
+  send()
   }
 
 
 const openCard = async (key, player, action) => {
-  await refreshData()
-    const item1 = sections.value.find((item) => item.player === player.player);
-    const item2 = sections.value.find((item) => item.player === Number(route.params.id));
-    sectionStore.setSection({...item2, [action]: {...item2[action], visible: true}});
-    await sectionStore.editSection(route.params.module,
-      sectionStore.currentSection._id,
-      {...sectionStore.currentSection, _id: undefined});
-    changeVisible(key, player)
-  }
+  const item1 = sections.value.find((item) => item.player === player.player);
+  const item2 = sections.value.find((item) => item.player === Number(route.params.id));
+  sectionStore.setSection({...item2, [action]: {...item2[action], visible: true}});
+  await sectionStore.editSection(route.params.module,
+    sectionStore.currentSection._id,
+    {...sectionStore.currentSection, _id: undefined});
+  changeVisible(key, player)
+}
 
 const copy = async (key, player, action) => {
-  await refreshData()
     const item1 = sections.value.find((item) => item.player === player.player);
     const item2 = sections.value.find((item) => item.player === Number(route.params.id));
     sectionStore.setSection({...item2, [key]: item1[key], [action]: {...item2[action], visible: true}});
   await sectionStore.editSection(route.params.module,
     sectionStore.currentSection._id,
     {...sectionStore.currentSection, _id: undefined});
-  await refreshData()
-  }
+  send()
+}
 
   const exchange = async (key, player, action) => {
-    await refreshData()
     const item1 = sections.value.find((item) => item.player === player.player);
     const item2 = sections.value.find((item) => item.player === Number(route.params.id));
     sectionStore.setSection({...item2, [key]: item1[key], [action]: {...item2[action], visible: true}});
@@ -1226,17 +1250,24 @@ const copy = async (key, player, action) => {
     await sectionStore.editSection(route.params.module,
       sectionStore.currentSection._id,
       {...sectionStore.currentSection, _id: undefined});
-    await refreshData()
+    send()
   }
 
 const open = () => {
-  ElMessageBox.alert(`Бедствие - ${modulesStore.currentModule.catastrophe} Оснащение - ${modulesStore.currentModule.bunker}`, 'Информация о бункере', {
+  ElMessageBox.alert(`${modulesStore.currentModule.catastrophe}`, 'Информация о бункере', {
     // if you want to disable its autofocus
     // autofocus: false,
     confirmButtonText: 'OK',
   })
 }
 
+const open2 = () => {
+  ElMessageBox.alert(`${modulesStore.currentModule.threat}`, 'Угроза', {
+    // if you want to disable its autofocus
+    // autofocus: false,
+    confirmButtonText: 'OK',
+  })
+}
 </script>
 <style>
 .el-container {
