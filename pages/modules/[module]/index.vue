@@ -1,14 +1,16 @@
 <template>
   <div>
-    <h1 class='title'>Выберите игрока <el-button plain @click="open">Бункер</el-button></h1> 
+    <h1 class='title'>Выберите игрока 
+      <el-button plain @click="open">Бункер</el-button>
+    </h1> 
     <client-only>
-      <el-carousel :interval="8000" type="card" height="400px">
-        <el-carousel-item v-for="item in sectionStore.sectionList.data.length" :key="item">
-          <h3 text="2xl" justify="center">Игрок {{ item }}</h3>
-          <div style="height: 50%; width: 100%; display: flex; justify-content: center; align-items: center;">
+      <el-carousel :interval="8000" type="card" height="60vh">
+        <el-carousel-item v-for="(item, index) in sectionStore.sectionList.data" :key="index">
+          <h3 class="carousel-title">Игрок {{ item.player }}</h3>
+          <div class="button-container">
             <el-button
               type="primary"
-              @click="$router.push(`/modules/${modulesStore.currentModule.sectionName}/${item}`)"
+              @click="$router.push(`/modules/${modulesStore.currentModule.sectionName}/${item.player}`)"
             >
               Выбрать
             </el-button>
@@ -18,24 +20,22 @@
     </client-only>
   </div>
 </template>
-<script setup>
-// Import necessary store modules
-import {useSectionsStore} from '~/store/section';
-import {useModulesStore} from '~/store/modules';
 
-// Initialize stores and route
+<script setup>
+// Импорт необходимых модулей
+import { useSectionsStore } from '~/store/section';
+import { useModulesStore } from '~/store/modules';
+
 const sectionStore = useSectionsStore();
 const modulesStore = useModulesStore();
 
-// Initialize route
 const route = useRoute();
 
-// Initialize variables
+// Переменные
 const renderComponent = ref(false);
 const dialogVisible = ref(false);
 
-// Fetch module data when the component is mounted
-await nextTick(async () =>{
+await nextTick(async () => {
   try {
     await modulesStore.getModuleByName(route.params.module);
   } catch (e) {
@@ -43,8 +43,7 @@ await nextTick(async () =>{
   }
 });
 
-// Fetch sections data when the component is mounted
-await nextTick(() =>{
+await nextTick(() => {
   try {
     sectionStore.getSections(route.params.module);
     console.log(sectionStore.sectionList.data)
@@ -53,116 +52,154 @@ await nextTick(() =>{
   }
 });
 
-// Force re-render the component when mounted
 onMounted(() => {
   forceRerender();
 });
 
-// Compute sections data
 const sections = computed(() => {
-  return Array.isArray(sectionStore?.sectionList?.data) ?
-   sectionStore.sectionList.data : [];
+  return Array.isArray(sectionStore?.sectionList?.data) ? sectionStore.sectionList.data : [];
 });
 
-// Compute dialog header based on whether it's an update or create operation
-const dialogHeader = computed(() => {
-  return sectionStore.currentSection?._id ?
-   {title: `Updating ${route.params.module}`,
-     buttonText: 'Save changes', type: 'primary'} :
-      {title: `Creating ${route.params.module} `,
-        buttonText: `Create ${route.params.module}`, type: 'success'};
-});
-
-// Open the add section dialog and initialize with default values
-function openAddDialog() {
-  const sectionTemplate = {player: 0};
-  sectionStore.setSection(sectionTemplate);
-  dialogVisible.value = true;
+function open() {
+  ElMessageBox.alert(`Бедствие - ${modulesStore.currentModule.catastrophe} Оснащение - ${modulesStore.currentModule.bunker}`, 'Информация о бункере', {
+    confirmButtonText: 'OK',
+  });
 }
 
-// Open the edit section dialog with existing data
-function openEditDialog(id) {
-  const item = sections.value.find((item) => item._id === id);
-  if (item._id) {
-    sectionStore.setSection(item);
-    dialogVisible.value = true;
-  }
-}
-
-// Close the dialog and reset section data
-function closeModal() {
-  const sectionTemplate = {};
-  sectionStore.setSection(sectionTemplate);
-  dialogVisible.value = false;
-}
-
-// Update the current section's value
-function updateCurrentValue(key, value) {
-  sectionStore.setSection({...sectionStore.currentSection, [key]: value});
-}
-
-// Handle form submission (create or update)
-async function submit() {
-  try {
-    if (sectionStore.currentSection._id) {
-      await sectionStore.editSection(route.params.module,
-          sectionStore.currentSection._id,
-          {...sectionStore.currentSection, _id: undefined});
-    } else {
-      await sectionStore.createSection(route.params.module,
-          {...sectionStore.currentSection, _id: undefined});
-    }
-    await nextTick(async () => {
-      sectionStore.getSections(route.params.module);
-    });
-    closeModal();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-// Force re-render the component
 function forceRerender() {
   renderComponent.value = false;
-
   nextTick(() => {
     renderComponent.value = true;
   });
 }
-
-const open = () => {
-  ElMessageBox.alert(`Бедствие - ${modulesStore.currentModule.catastrophe} Оснащение - ${modulesStore.currentModule.bunker}`, 'Информация о бункере', {
-    // if you want to disable its autofocus
-    // autofocus: false,
-    confirmButtonText: 'OK',
-  })
-}
-
 </script>
+
 <style>
 .el-container {
   background: #07184F;
 }
-</style>
-<style scoped>
+
 .title {
   text-align: center;
   color: #8092CE;
+  font-size: 20px;
+  padding: 10px;
 }
+
 .el-carousel__item h3 {
   color: #475669;
   opacity: 0.75;
-  line-height: 200px;
-  font-size: 50px;
+  font-size: 20px;
   margin: 0;
   text-align: center;
 }
 
 .el-carousel__item:nth-child(2n) {
   background-color: #99a9bf;
+  border-radius: 8px;
+  min-width: 230px;
 }
 
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
+  border-radius: 8px;
+  min-width: 230px;
+}
+
+.card {
+  border-radius: 8px;
+  padding: 15px;
+  text-align: left;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.card h3 {
+  color: #475669;
+  margin-bottom: 15px;
+  font-size: 16px;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.card ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.card li strong {
+  color: #2f3e70;
+  display: inline-block;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+.el-button {
+  font-size: 12px;
+  padding: 6px 12px;
+  margin-top: 5px;
+  white-space: nowrap; /* Предотвращает разрыв текста в кнопках */
+}
+
+.el-carousel__item {
+  padding: 10px;
+}
+
+.el-carousel__item:nth-child(2n),
+.el-carousel__item:nth-child(2n + 1) {
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.card .el-button + .el-button {
+  margin-top: 5px;
+}
+
+/* Медиазапросы для мобильных устройств */
+@media (max-width: 768px) {
+  .title {
+    font-size: 18px;
+    padding: 5px;
+  }
+
+  .el-carousel__item {
+    min-width: 100%; /* Для слайдов на мобильных */
+  }
+
+  .card {
+    padding: 10px;
+    max-width: 90%;
+  }
+
+  .card h3 {
+    font-size: 14px;
+    word-wrap: break-word;
+  }
+
+  .card li {
+    font-size: 12px;
+  }
+
+  .el-button {
+    font-size: 12px; /* Уменьшаем размер кнопок для мобильных */
+    padding: 6px 12px;
+  }
+
+  .el-carousel__item h3 {
+    font-size: 18px;
+  }
+
+  .el-carousel {
+    height: 60vh; /* Уменьшаем высоту карусели */
+  }
 }
 </style>

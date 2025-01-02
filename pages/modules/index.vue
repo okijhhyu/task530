@@ -208,9 +208,8 @@ const generateCharacters = async (sectionName, numCharacters) => {
   { "text": "Откройте фобию выбранного игрока", "action": "Открыть", "character": "phobia" },
   { "text": "Откройте факт выбранного игрока", "action": "Открыть", "character": "fact" },
   { "text": "Откройте багаж выбранного игрока", "action": "Открыть", "character": "baggage" },
-  { "text": "Откройте проффессию выбранного игрока", "action": "Открыть", "character": "profession" },
   { "text": "Откройте био характеристику выбранного игрока", "action": "Открыть", "character": "bio" },
-  { "text": "Откройте выбранную характеристику выбранного игрока", "action": "Открыть", "character": "certain" },
+  { "text": "Откройте любую характеристику выбранного игрока", "action": "Открыть", "character": "certain" },
 ]
   let genders = ["Мужчина", "Женщина"];
   const half = Math.ceil(numCharacters / 2);

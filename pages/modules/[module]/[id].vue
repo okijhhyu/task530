@@ -2,9 +2,12 @@
   <div>
     <h1 class='title'><el-button plain @click="open">Бункер</el-button><el-button plain @click="refreshData">Обновить данные</el-button></h1>
     <client-only>
-      <el-carousel ref="carusel" type="card" height="80vh" :autoplay="false" @change="changeRoute">
+      <el-carousel ref="carusel" height="80vh" :autoplay="false" @change="changeRoute">
         <el-carousel-item v-for="item in sections" :key="item">
           <div class="card">
+            <el-button style="position: absolute;right: 30px;top: 5px;">
+              x
+            </el-button>
             <h3>Игрок: {{ item.player }} <strong><span v-if="item.player === lastSegment || item.profession.visible ">{{ item.profession.name }}</span>
                 <el-button
                   v-if="item.player === lastSegment && !item.profession.visible"
@@ -250,7 +253,7 @@
                  Заменить
                 </el-button>
               </li>
-              <li><strong>Здорровье:</strong> <span v-if="item.player === lastSegment || item.health.visible">{{ item.health.name }}</span>
+              <li><strong>Здоровье:</strong> <span v-if="item.player === lastSegment || item.health.visible">{{ item.health.name }}</span>
               <el-button
                 v-if="item.player === lastSegment && !item.health.visible"
                   @click="changeVisible('health', item)"
@@ -1239,12 +1242,14 @@ const open = () => {
 .el-container {
   background: #07184F;
 }
-</style>
-<style scoped>
+
 .title {
   text-align: center;
   color: #8092CE;
+  font-size: 20px;
+  padding: 10px;
 }
+
 .el-carousel__item h3 {
   color: #475669;
   opacity: 0.75;
@@ -1252,6 +1257,7 @@ const open = () => {
   margin: 0;
   text-align: center;
 }
+
 .el-carousel__item:nth-child(2n) {
   background-color: #99a9bf;
   border-radius: 8px;
@@ -1263,6 +1269,7 @@ const open = () => {
   border-radius: 8px;
   min-width: 230px;
 }
+
 .card {
   border-radius: 8px;
   padding: 20px;
@@ -1290,5 +1297,46 @@ const open = () => {
 
 .card li strong {
   color: #2f3e70;
+}
+
+/* Медиазапросы для мобильных устройств */
+@media (max-width: 768px) {
+  .title {
+    font-size: 18px;
+    padding: 5px;
+  }
+
+  .el-carousel__item {
+    min-width: 100%; /* Для слайдов на мобильных */
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  .card h3 {
+    font-size: 16px;
+  }
+
+  .card li {
+    font-size: 14px;
+  }
+
+  .card .el-button {
+    font-size: 12px; /* Уменьшаем размер кнопок для мобильных */
+    padding: 6px 12px;
+  }
+
+  .card .el-button + .el-button {
+    margin-top: 5px;
+  }
+
+  .el-carousel__item h3 {
+    font-size: 18px;
+  }
+
+  .el-carousel {
+    height: 90vh; /* Уменьшаем высоту карусели */
+  }
 }
 </style>
