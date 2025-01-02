@@ -5,7 +5,7 @@
       <el-carousel ref="carusel" height="80vh" :autoplay="false" @change="changeRoute">
         <el-carousel-item v-for="item in sections" :key="item">
           <div class="card">
-            <el-button style="position: absolute;right: 30px;top: 5px;" v-if="!item.kicked" @click="kick(item)">
+            <el-button style="position: absolute;right: 30px;top: 5px;" v-if="!item.kicked" :disabled="currentPlayer.kicked" @click="kick(item)">
               x
             </el-button>
             <div v-else style="position: absolute;right: 30px;top: 5px; color:red">
@@ -1101,12 +1101,12 @@ async function changeRoute(e) {
 
 async function kick(item) {
  sectionStore.setSection({...item, kicked: true });
-    if (sectionStore.currentSection._id) {
-      await sectionStore.editSection(route.params.module,
-          sectionStore.currentSection._id,
-          {...sectionStore.currentSection, _id: undefined});
-    }
-    send()
+  if (sectionStore.currentSection._id) {
+    await sectionStore.editSection(route.params.module,
+        sectionStore.currentSection._id,
+        {...sectionStore.currentSection, _id: undefined});
+  }
+  send()
 }
 
 async function refreshData() {
