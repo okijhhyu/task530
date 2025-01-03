@@ -1,11 +1,4 @@
 const { WebSocketServer } = require('ws');
-const fs = require('fs');
-const https = require('https');
-
-const server = https.createServer({
-    cert: fs.readFileSync('path/to/fullchain.pem'), // Полный цепочный сертификат
-    key: fs.readFileSync('path/to/privkey.pem'),   // Приватный ключ
-  });
 
 const wss = new WebSocketServer({ port: 443 });
 
