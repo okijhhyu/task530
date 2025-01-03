@@ -2,7 +2,7 @@
   "name": "nuxt-app",
   "private": true,
   "scripts": {
-    "build": "nuxt build && node server/websocket.js",
+    "build": "nuxt build",
     "dev": "concurrently \"nuxt dev\" \"node server/websocket.js\"",
     "generate": "nuxt generate",
     "preview": "nuxt preview",

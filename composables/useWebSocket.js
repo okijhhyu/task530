@@ -1,6 +1,5 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router'; // Для использования route.params
-import { nextTick } from 'vue';
 
 import {useSectionsStore} from '~/store/section';
 export function useWebSocket(url, carusel) {
@@ -10,7 +9,7 @@ export function useWebSocket(url, carusel) {
 
   const sendMessage = (message) => {
     if (socket.value && socket.value.readyState === WebSocket.OPEN) {
-      socket.value.send(JSON.stringify({ message }));
+      socket.value.send(message);
     }
   };
 
@@ -29,8 +28,10 @@ export function useWebSocket(url, carusel) {
     socket.value.onmessage = async (event) => {
         
       const dataFromServer = JSON.parse(event.data);
-      messages.value.push(dataFromServer.message);
-      if (JSON.parse(dataFromServer.message).message === 'Обновить данные') {
+      messages.value.push(dataFromServer.message)
+      console.log(dataFromServer.message);
+      if (dataFromServer.message === "Обновить данные") {
+        console.log(dataFromServer.message)
         await refreshData();  // Вызываем функцию обновления данных
       }
     };
