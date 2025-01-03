@@ -1,6 +1,13 @@
 const { WebSocketServer } = require('ws');
+const fs = require('fs');
+const https = require('https');
 
-const wss = new WebSocketServer({ port: 8080 });
+const server = https.createServer({
+    cert: fs.readFileSync('/26786.pem'), // Полный цепочный сертификат
+    key: fs.readFileSync('/privat.key'),   // Приватный ключ
+  });
+
+const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
@@ -27,4 +34,6 @@ wss.on('connection', (ws) => {
   });
 });
 
-console.log('WebSocket server is running on ws://localhost:443');
+server.listen(443, () => {
+    console.log('Secure WebSocket server is running on wss://localhost');
+  });
