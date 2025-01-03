@@ -1044,7 +1044,7 @@ const available = computed(() => {
 // Initialize stores and route
 const sectionStore = useSectionsStore();
 const modulesStore = useModulesStore();
-const { sendMessage, data } = useWebSocket('wss:https://task530.onrender.com:443/', carusel);
+const { sendMessage, data } = useWebSocket('wss://task530.onrender.com:443/', carusel);
 
 const send = () => {
   sendMessage("Обновить данные");
