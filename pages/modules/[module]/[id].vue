@@ -1044,7 +1044,7 @@ const available = computed(() => {
 // Initialize stores and route
 const sectionStore = useSectionsStore();
 const modulesStore = useModulesStore();
-const { sendMessage, data } = useWebSocket('wss://localhost:443/', carusel);
+const { sendMessage, data } = useWebSocket('wss://task530-ten.vercel.app:443/', carusel);
 
 const send = () => {
   sendMessage("Обновить данные");
