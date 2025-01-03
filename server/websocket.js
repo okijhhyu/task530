@@ -3,7 +3,7 @@ const fs = require('fs');
 const https = require('https');
 
 const server = https.createServer({
-    cert: fs.readFileSync('/26786.pem'), // Полный цепочный сертификат
+    cert: fs.readFileSync('/26786.crt'), // Полный цепочный сертификат
     key: fs.readFileSync('/privat.key'),   // Приватный ключ
   });
 
