@@ -3,11 +3,11 @@ const fs = require('fs');
 const https = require('https');
 
 const server = https.createServer({
-    cert: fs.readFileSync('/26786.crt'), // Полный цепочный сертификат
-    key: fs.readFileSync('/privat.key'),   // Приватный ключ
+    cert: fs.readFileSync('path/to/fullchain.pem'), // Полный цепочный сертификат
+    key: fs.readFileSync('path/to/privkey.pem'),   // Приватный ключ
   });
 
-const wss = new WebSocketServer({ server });
+const wss = new WebSocketServer({ port: 443 });
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
@@ -34,6 +34,4 @@ wss.on('connection', (ws) => {
   });
 });
 
-server.listen(443, () => {
-    console.log('Secure WebSocket server is running on wss://localhost');
-  });
+console.log('WebSocket server is running on ws://localhost:443');
